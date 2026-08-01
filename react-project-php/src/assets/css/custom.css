@@ -1,0 +1,24 @@
+#css:checked + label{
+    background-color: rgb(112, 112, 223);
+
+}
+#css + label{
+    background-color: rgb(188, 223, 105);
+
+}
+.admin-sidebar{
+    transition: 0.5s;
+}
+
+@media screen and (max-width:991.98px){
+    #sidebarToggle:checked + .admin-sidebar{
+        transform: translateX(0%) !important;
+    }
+    #sidebarToggle:checked ~ .sidebar-backdrop{
+        display: block !important;
+    } 
+    
+}
+.table td, .table th{
+    background-color: transparent;
+}
