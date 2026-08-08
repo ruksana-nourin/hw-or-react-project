@@ -1,3 +1,5 @@
+import { Link } from "react-router"
+
 function Navbar() {
     return (
         <>
@@ -27,18 +29,18 @@ function Navbar() {
                             </button>
                             <div className="dropdown-menu dropdown-menu-end notification-menu">
                                 <div className="dropdown-header fw-bold text-body">Notifications</div>
-                                <a className="dropdown-item" href="users.html">
+                                <Link className="dropdown-item" to="users.html">
                                     <span className="notification-title">New user registered</span>
                                     <span className="notification-time">4 minutes ago</span>
-                                </a>
-                                <a className="dropdown-item" href="charts.html">
+                                </Link>
+                                <Link className="dropdown-item" to="charts.html">
                                     <span className="notification-title">Revenue target reached</span>
                                     <span className="notification-time">32 minutes ago</span>
-                                </a>
-                                <a className="dropdown-item" href="settings.html">
+                                </Link>
+                                <Link className="dropdown-item" to="settings.html">
                                     <span className="notification-title">Security review completed</span>
                                     <span className="notification-time">1 hour ago</span>
-                                </a>
+                                </Link>
                             </div>
                         </div>
 
@@ -48,10 +50,10 @@ function Navbar() {
                                 <span className="profile-name d-none d-sm-inline">R. Nourin</span>
                             </button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" href="profile.html">Profile</a></li>
-                                <li><a className="dropdown-item" href="settings.html">Account settings</a></li>
+                                <li><Link className="dropdown-item" to="profile.html">Profile</Link></li>
+                                <li><Link className="dropdown-item" to="settings.html">Account settings</Link></li>
                                 <li><hr className="dropdown-divider" /></li>
-                                <li><a className="dropdown-item" href="login.html">Sign out</a></li>
+                                <li><Link className="dropdown-item" to="/login">Sign out</Link></li>
                             </ul>
                         </div>
                     </div>

@@ -1631,3 +1631,23 @@ html[data-theme="dark"] {
   border-top-color: var(--admin-sidebar-border);
   color: var(--admin-sidebar-text);
 }
+
+/* Custom nav dropdown */
+.nav-dropdown {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.submenu {
+    margin-left: 18px;
+    margin-top: 4px;
+}
+
+.sub-link {
+    font-size: 14px;
+    padding-left: 42px !important;
+}

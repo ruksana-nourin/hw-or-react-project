@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router"
 function Sidebar() {
     return (
         <>
-            <input type="checkbox" className="d-none"  id="sidebarToggle"/>
+            <input type="checkbox" className="d-none" id="sidebarToggle" />
 
             <aside className="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
                 <div className="sidebar-header">
@@ -21,50 +21,75 @@ function Sidebar() {
                         <span className="nav-icon"><i className="bi bi-speedometer2" aria-hidden="true"></i></span>
                         <span className="nav-text">Dashboard</span>
                     </NavLink>
+
+
+                    <small className="text-muted d-flex align-items-center nav-header">Sales <hr className="w-100 ms-2 my-0" /></small>
+                    <NavLink className="nav-link" to="/sales">
+                        <span className="nav-icon"><i className="bi bi-cart" aria-hidden="true"></i></span>
+                        <span className="nav-text">Sales</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/sales-returns">
+                        <span className="nav-icon"><i className="bi bi-bag-check" aria-hidden="true"></i></span>
+                        <span className="nav-text">Sales returns</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/purchases">
+                        <span className="nav-icon"><i className="bi bi-bag" aria-hidden="true"></i></span>
+                        <span className="nav-text">Purchases</span>
+                    </NavLink>
+                    
+                    <small className="text-muted d-flex align-items-center nav-header">Products <hr className="w-100 ms-2 my-0" /></small>
+                    <NavLink className="nav-link" to="/products">
+                        <span className="nav-icon"><i className="bi bi-people" aria-hidden="true"></i></span>
+                        <span className="nav-text">Products</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/categories">
+                        <span className="nav-icon"><i className="bi bi-list-ul" aria-hidden="true"></i></span>
+                        <span className="nav-text">Categories</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/brands">
+                        <span className="nav-icon"><i className="bi bi-tags" aria-hidden="true"></i></span>
+                        <span className="nav-text">Brands</span>
+                    </NavLink>
+                    
+                    <small className="text-muted d-flex align-items-center nav-header">Inventory <hr className="w-100 ms-2 my-0" /></small>
+                    <NavLink className="nav-link" to="/inventory">
+                        <span className="nav-icon"><i className="bi bi-box" aria-hidden="true"></i></span>
+                        <span className="nav-text">Inventory Reports</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/inventory-transactions">
+                        <span className="nav-icon"><i className="bi bi-exclamation-triangle" aria-hidden="true"></i></span>
+                        <span className="nav-text">Inventory Transactions</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/inventory-adjustment">
+                        <span className="nav-icon"><i className="bi bi-pencil" aria-hidden="true"></i></span>
+                        <span className="nav-text">Inventory Adjustment</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/adjustment-types">
+                        <span className="nav-icon"><i className="bi bi-tools" aria-hidden="true"></i></span>
+                        <span className="nav-text">Adjustment Types</span>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/transaction-types">
+                        <span className="nav-icon"><i className="bi bi-clipboard" aria-hidden="true"></i></span>
+                        <span className="nav-text">Transaction Types</span>
+                    </NavLink>
+
+
+
+
+                    <small className="text-muted d-flex align-items-center nav-header">Auth <hr className="w-100 ms-2 my-0" /></small>
                     <NavLink className="nav-link" to="/user">
                         <span className="nav-icon"><i className="bi bi-people" aria-hidden="true"></i></span>
                         <span className="nav-text">Users</span>
                     </NavLink>
-                    <Link className="nav-link" to="/add-user">
+                    <NavLink className="nav-link" to="/add-user">
                         <span className="nav-icon"><i className="bi bi-person-plus" aria-hidden="true"></i></span>
                         <span className="nav-text">Add User</span>
-                    </Link>
-                    <Link className="nav-link" to="profile.html">
-                        <span className="nav-icon"><i className="bi bi-person-badge" aria-hidden="true"></i></span>
-                        <span className="nav-text">Profile</span>
-                    </Link>
-                    <Link className="nav-link" to="charts.html">
-                        <span className="nav-icon"><i className="bi bi-bar-chart-line" aria-hidden="true"></i></span>
-                        <span className="nav-text">Charts</span>
-                    </Link>
-                    <Link className="nav-link" to="tables.html">
-                        <span className="nav-icon"><i className="bi bi-table" aria-hidden="true"></i></span>
-                        <span className="nav-text">Tables</span>
-                    </Link>
-                    <Link className="nav-link" to="forms.html">
-                        <span className="nav-icon"><i className="bi bi-ui-checks-grid" aria-hidden="true"></i></span>
-                        <span className="nav-text">Forms</span>
-                    </Link>
-                    <Link className="nav-link" to="components.html">
-                        <span className="nav-icon"><i className="bi bi-grid-3x3-gap" aria-hidden="true"></i></span>
-                        <span className="nav-text">Components</span>
-                    </Link>
-                    <Link className="nav-link" to="alerts.html">
-                        <span className="nav-icon"><i className="bi bi-exclamation-triangle" aria-hidden="true"></i></span>
-                        <span className="nav-text">Alerts</span>
-                    </Link>
-                    <Link className="nav-link" to="modals.html">
-                        <span className="nav-icon"><i className="bi bi-window-stack" aria-hidden="true"></i></span>
-                        <span className="nav-text">Modals</span>
-                    </Link>
-                    <Link className="nav-link" to="settings.html">
-                        <span className="nav-icon"><i className="bi bi-gear" aria-hidden="true"></i></span>
-                        <span className="nav-text">Settings</span>
-                    </Link>
-                    <Link className="nav-link" to="blank.html">
-                        <span className="nav-icon"><i className="bi bi-file-earmark" aria-hidden="true"></i></span>
-                        <span className="nav-text">Blank Page</span>
-                    </Link>
+                    </NavLink>
+                    <NavLink className="nav-link" to="/role">
+                        <span className="nav-icon"><i className="bi bi-person-plus" aria-hidden="true"></i></span>
+                        <span className="nav-text">Role</span>
+                    </NavLink>
+
                 </nav>
 
                 <div className="sidebar-user">
@@ -79,7 +104,7 @@ function Sidebar() {
                 </div>
             </aside>
             <label htmlFor="sidebarToggle" className="sidebar-backdrop"></label>
-            
+
         </>
     )
 };

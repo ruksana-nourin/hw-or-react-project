@@ -1,16 +1,18 @@
-import { Link, NavLink } from "react-router"
+import { Link, NavLink } from "react-router";
+import { useState } from "react";
 
 function Sidebar() {
+    const [libraryOpen, setLibraryOpen] = useState(false);
     return (
         <>
-            <input type="checkbox" className="d-none"  id="sidebarToggle"/>
+            <input type="checkbox" className="d-none" id="sidebarToggle" />
 
             <aside className="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
                 <div className="sidebar-header">
                     <Link className="brand-mark" to="/" aria-label="adminHMD dashboard">
                         <span className="brand-icon"><i className="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
                         <span className="brand-copy">
-                            <span className="brand-title">adminHMD</span>
+                            <span className="brand-title">Library M. System</span>
                             <span className="brand-subtitle">Admin Template</span>
                         </span>
                     </Link>
@@ -21,14 +23,60 @@ function Sidebar() {
                         <span className="nav-icon"><i className="bi bi-speedometer2" aria-hidden="true"></i></span>
                         <span className="nav-text">Dashboard</span>
                     </NavLink>
-                    <NavLink className="nav-link" to="/user">
-                        <span className="nav-icon"><i className="bi bi-people" aria-hidden="true"></i></span>
-                        <span className="nav-text">Users</span>
-                    </NavLink>
-                    <NavLink className="nav-link" to="/add-user">
-                        <span className="nav-icon"><i className="bi bi-person-plus" aria-hidden="true"></i></span>
-                        <span className="nav-text">Add User</span>
-                    </NavLink>
+                    <div className="nav-group">
+
+                        <button
+                            type="button"
+                            className="nav-link nav-dropdown"
+                            onClick={() => setLibraryOpen(!libraryOpen)}
+                        >
+                            <span className="nav-icon">
+                                <i className="bi bi-book"></i>
+                            </span>
+
+                            <span className="nav-text">
+                                Library
+                            </span>
+
+                            <span className="ms-auto">
+                                <i
+                                    className={`bi ${libraryOpen
+                                        ? "bi-chevron-down"
+                                        : "bi-chevron-right"
+                                        }`}
+                                ></i>
+                            </span>
+                        </button>
+
+                        {libraryOpen && (
+
+                            <div className="submenu">
+
+                                <NavLink className="nav-link sub-link" to="/books">
+                                    <i className="bi bi-book-fill"></i>
+                                    Books
+                                </NavLink>
+
+                                <NavLink className="nav-link sub-link" to="/authors">
+                                    <i className="bi bi-people-fill"></i>
+                                    Authors
+                                </NavLink>
+
+                                <NavLink className="nav-link sub-link" to="/categories">
+                                    <i className="bi bi-tags-fill"></i>
+                                    Categories
+                                </NavLink>
+
+                                <NavLink className="nav-link sub-link" to="/publishers">
+                                    <i className="bi bi-person-lines-fill"></i>
+                                    Publishers
+                                </NavLink>
+
+                            </div>
+
+                        )}
+
+                    </div>
                     <NavLink className="nav-link" to="profile.html">
                         <span className="nav-icon"><i className="bi bi-person-badge" aria-hidden="true"></i></span>
                         <span className="nav-text">Profile</span>
@@ -79,7 +127,7 @@ function Sidebar() {
                 </div>
             </aside>
             <label htmlFor="sidebarToggle" className="sidebar-backdrop"></label>
-            
+
         </>
     )
 };

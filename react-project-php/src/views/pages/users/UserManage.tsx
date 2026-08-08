@@ -84,7 +84,7 @@ function UserManage() {
                             </div>
                             <div className="d-flex flex-wrap gap-2">
                                 <input className="form-control form-control-sm table-search" type="search" placeholder="Search users" data-table-search="usersTable" aria-label="Search users" />
-                                <a className="btn btn-primary btn-sm" href="add-user.html"><i className="bi bi-person-plus" aria-hidden="true"></i> Add User</a>
+                                <Link className="btn btn-primary btn-sm" to="/add-user"><i className="bi bi-person-plus" aria-hidden="true"></i> Add User</Link >
                             </div>
                         </div>
                         <div className="table-responsive">
@@ -107,8 +107,8 @@ function UserManage() {
                                         <td>Jan 12, 2026</td>
                                         <td className="text-end ">
                                             <div className="d-flex g-1 justify-content-end">
-                                                <button className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></button>
-                                                <button className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></button>
+                                                <Link to="/user-detail/1" className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></Link>
+                                                <Link to="/user-edit/1" className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></Link>
                                                 <button className="btn btn-danger btn-sm mx-1" type="button"><i className="bi bi-trash" aria-hidden="true"></i></button>
                                             </div>
                                         </td>
@@ -129,8 +129,8 @@ function UserManage() {
                                         <td>Feb 03, 2026</td>
                                         <td className="text-end">
                                             <div className="d-flex g-1 justify-content-end">
-                                                <button className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></button>
-                                                <button className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></button>
+                                                <Link to="/user-detail/2" className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></Link>
+                                                <Link to="/user-edit/2" className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></Link>
                                                 <button className="btn btn-danger btn-sm mx-1" type="button"><i className="bi bi-trash" aria-hidden="true"></i></button>
                                             </div>
                                         </td>
@@ -151,8 +151,8 @@ function UserManage() {
                                         <td>Mar 18, 2026</td>
                                         <td className="text-end">
                                             <div className="d-flex g-1 justify-content-end">
-                                                <button className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></button>
-                                                <button className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></button>
+                                                <Link to="/user-detail/3" className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></Link>
+                                                <Link to="/user-edit/3" className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></Link>
                                                 <button className="btn btn-danger btn-sm mx-1" type="button"><i className="bi bi-trash" aria-hidden="true"></i></button>
                                             </div>
                                         </td>
@@ -173,8 +173,8 @@ function UserManage() {
                                         <td>Apr 07, 2026</td>
                                         <td className="text-end">
                                             <div className="d-flex g-1 justify-content-end">
-                                                <button className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></button>
-                                                <button className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></button>
+                                                <Link to="/user-detail/4" className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></Link>
+                                                <Link to="/user-edit/4" className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></Link>
                                                 <button className="btn btn-danger btn-sm mx-1" type="button"><i className="bi bi-trash" aria-hidden="true"></i></button>
                                             </div>
                                         </td>
@@ -195,8 +195,8 @@ function UserManage() {
                                         <td>Apr 22, 2026</td>
                                         <td className="text-end">
                                             <div className="d-flex g-1 justify-content-end">
-                                                <button className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></button>
-                                                <button className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></button>
+                                                <Link to="/user-detail/5" className="btn btn-success btn-sm mx-1" type="button"><i className="bi bi-eye" aria-hidden="true"></i></Link>
+                                                <Link to="/user-edit/5" className="btn btn-primary btn-sm mx-1" type="button"><i className="bi bi-pencil" aria-hidden="true"></i></Link>
                                                 <button className="btn btn-danger btn-sm mx-1" type="button"><i className="bi bi-trash" aria-hidden="true"></i></button>
                                             </div>
                                         </td>
@@ -206,7 +206,7 @@ function UserManage() {
                         </div>
                         <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mt-3">
                             <p className="text-muted small mb-0">Showing 1 to 5 of 124 users</p>
-                            <nav aria-label="Users pagination"><ul className="pagination pagination-sm mb-0"><li className="page-item disabled"><a className="page-link" href="#">Previous</a></li><li className="page-item active"><a className="page-link" href="#">1</a></li><li className="page-item"><a className="page-link" href="#">2</a></li><li className="page-item"><a className="page-link" href="#">Next</a></li></ul></nav>
+                            <nav aria-label="Users pagination"><ul className="pagination pagination-sm mb-0"><li className="page-item disabled"><Link className="page-link" to="#">Previous</Link ></li><li className="page-item active"><Link className="page-link" to="#">1</Link ></li><li className="page-item"><Link className="page-link" to="#">2</Link ></li><li className="page-item"><Link className="page-link" to="#">Next</Link ></li></ul></nav>
                         </div>
                     </section>
                 </div>
