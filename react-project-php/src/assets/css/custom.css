@@ -1,24 +1,35 @@
-#css:checked + label{
-    background-color: rgb(112, 112, 223);
-
+/* #myInput:checked + label {
+    background-color: #2196f3;
 }
-#css + label{
-    background-color: rgb(188, 223, 105);
-
-}
+#myInput + label {
+    background-color: #bb51db;
+} */
 .admin-sidebar{
-    transition: 0.5s;
+    transition: .2s;
 }
-
-@media screen and (max-width:991.98px){
-    #sidebarToggle:checked + .admin-sidebar{
+/* .sidebar-backdrop{
+   background: rgba(175, 4, 18, 0.5);
+} */
+@media screen and (max-width:991.98px) {
+    #sidebarToggle:checked + .admin-sidebar {
         transform: translateX(0%) !important;
     }
-    #sidebarToggle:checked ~ .sidebar-backdrop{
+    #sidebarToggle:checked ~ .sidebar-backdrop {
         display: block !important;
-    } 
-    
+    }
 }
+
 .table td, .table th{
     background-color: transparent;
+}
+.form-control, .form-select {
+    border-color: var(--admin-border);
+    background-color: var(--admin-surface);
+    color: var(--admin-text);
+}
+.form-control:focus, .form-select:focus {
+    border-color: #93c5fd;
+    background-color: var(--admin-surface);
+    color: var(--admin-text);
+    box-shadow: var(--admin-ring);
 }

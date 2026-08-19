@@ -1,4 +1,6 @@
- function PageHeading({icon="circle-fill", subtitle, title,desc="", children="" }: any) {
+
+
+function PageHeading({icon="circle-fill", subtitle, title,desc="", children="" }: any) {
     return (
         <>
             <div className="page-heading">
@@ -23,3 +25,5 @@
 }
 
 export default PageHeading;
+
+

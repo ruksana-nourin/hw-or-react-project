@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useTheme } from "../../hooks/useTheme";
 
 function Login() {
@@ -24,10 +25,8 @@ function Login() {
             <main className="auth-page">
                 <section className="auth-card">
                     <a className="auth-brand" href="index.html"><span className="brand-icon"><i className="bi bi-grid-1x2-fill"
-                        aria-hidden="true"></i></span><span><strong>adminHMD</strong><small>Sign in to your admin
-                            workspace.</small></span></a>
-                    <div className="auth-visual"><img src="../assets/images/png/dasher-ui-bootstrap-5.jpg"
-                        alt="adminHMD dashboard interface" /></div>
+                        aria-hidden="true"></i></span><span><strong>Library Management System</strong><small>Sign in </small></span></a>
+                    
                     <form className="needs-validation" noValidate>
                         <div className="mb-4">
                             <p className="eyebrow mb-1">Secure Access</p>
@@ -46,8 +45,8 @@ function Login() {
                         </div>
                         <div className="form-check mb-4"><input className="form-check-input" type="checkbox" id="rememberMe" /><label
                             className="form-check-label" htmlFor="rememberMe">Remember me</label></div>
-                        <button className="btn btn-primary w-100" type="submit"><i className="bi bi-box-arrow-in-right" aria-hidden="true"></i>
-                            Sign In</button>
+                        <Link to="/" className="btn btn-primary w-100" type="submit"><i className="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+                            Sign In</Link>
                     </form>
 
                     <div className="auth-footer">New here? <a href="register.html">Create an account</a></div>

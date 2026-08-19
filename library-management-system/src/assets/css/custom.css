@@ -22,3 +22,16 @@
 .table td, .table th{
     background-color: transparent;
 }
+.category, .status{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 48px;
+}
+
+.filter-reset-btn {
+    height: 40px;
+    margin-top: 50px;
+    align-items: center;
+    
+}
+

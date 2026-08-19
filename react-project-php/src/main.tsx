@@ -7,9 +7,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.min.css'
 import './assets/css/custom.css'
 
-import routes from './Routes.tsx';
-
-
+import { routes } from './routes'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

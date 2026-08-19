@@ -1,214 +1,505 @@
+import { Link } from "react-router";
 import PageHeading from "../../components/PageHeading";
 
 function Dashboard() {
+
+    // Dashboard mock data
+    const dashboardStats = {
+        totalBooks: 250,
+        totalMembers: 120,
+        issuedBooks: 45,
+        totalFine: 2350,
+    };
+
+    // Recent book issues
+    const recentIssues = [
+        {
+            id: 1,
+            member: "Rani",
+            book: "Clean Code",
+            issueDate: "10 Aug 2026",
+            dueDate: "17 Aug 2026",
+            status: "Issued",
+        },
+        {
+            id: 2,
+            member: "Karim",
+            book: "Atomic Habits",
+            issueDate: "09 Aug 2026",
+            dueDate: "16 Aug 2026",
+            status: "Issued",
+        },
+        {
+            id: 3,
+            member: "Nadia",
+            book: "JavaScript: The Good Parts",
+            issueDate: "05 Aug 2026",
+            dueDate: "12 Aug 2026",
+            status: "Late",
+        },
+        {
+            id: 4,
+            member: "Sakib",
+            book: "The Pragmatic Programmer",
+            issueDate: "03 Aug 2026",
+            dueDate: "10 Aug 2026",
+            status: "Returned",
+        },
+    ];
+
+    // Recent members
+    const recentMembers = [
+        {
+            id: 1,
+            name: "Rani",
+            email: "rani@gmail.com",
+            joinedDate: "10 Aug 2026",
+            status: "Active",
+        },
+        {
+            id: 2,
+            name: "Karim",
+            email: "karim@gmail.com",
+            joinedDate: "09 Aug 2026",
+            status: "Active",
+        },
+        {
+            id: 3,
+            name: "Nadia",
+            email: "nadia@gmail.com",
+            joinedDate: "07 Aug 2026",
+            status: "Active",
+        },
+        {
+            id: 4,
+            name: "Sakib",
+            email: "sakib@gmail.com",
+            joinedDate: "05 Aug 2026",
+            status: "Inactive",
+        },
+    ];
+
     return (
         <>
-            
-            <main className="dashboard-content">
-                <div className="container-fluid px-3 px-lg-4 py-4">
-                    <PageHeading 
-                        icon="speedometer2"
-                        subtitle="Overview"
-                        title="Dashboard"
-                        desc="Monitor performance, sales, users, and support from one clean workspace."
-                    />
+            {/* Page Heading */}
+            <PageHeading
+                icon="speedometer2"
+                subtitle="Overview"
+                title="Dashboard"
+                desc="Welcome to the Library Management System!"
+            />
 
-                    <section className="row g-3 mt-1" aria-label="Dashboard metrics">
-                        <div className="col-12 col-sm-6 col-xl-3">
-                            <article className="metric-card metric-primary">
-                                <div className="metric-top">
-                                    <span className="metric-label">Revenue</span>
-                                    <span className="metric-icon"><i className="bi bi-currency-dollar" aria-hidden="true"></i></span>
-                                </div>
-                                <div className="metric-value">$48,240</div>
-                                <div className="metric-meta">
-                                    <span className="text-success">+12.5%</span>
-                                    <span>from last month</span>
-                                </div>
-                            </article>
+
+            {/* =========================
+                SUMMARY CARDS
+            ========================== */}
+            <div className="row g-4 mb-4">
+
+                {/* Total Books */}
+                <div className="col-12 col-sm-6 col-xl-3">
+                    <article className="metric-card metric-primary">
+                        <div className="metric-top">
+                            <span className="metric-label">Total Books</span>
+                            <span className="metric-icon"><i className="bi bi-book" aria-hidden="true"></i></span>
                         </div>
-
-                        <div className="col-12 col-sm-6 col-xl-3">
-                            <article className="metric-card metric-success">
-                                <div className="metric-top">
-                                    <span className="metric-label">Orders</span>
-                                    <span className="metric-icon"><i className="bi bi-bag-check" aria-hidden="true"></i></span>
-                                </div>
-                                <div className="metric-value">1,284</div>
-                                <div className="metric-meta">
-                                    <span className="text-success">+8.2%</span>
-                                    <span>new orders</span>
-                                </div>
-                            </article>
+                        <div className="metric-value"> {dashboardStats.totalBooks}</div>
+                        <div className="mt-3">
+                            <Link
+                                to="/books"
+                                className="text-decoration-none small"
+                            >
+                                View all books
+                                <i className="bi bi-arrow-right ms-1"></i>
+                            </Link>
                         </div>
-
-                        <div className="col-12 col-sm-6 col-xl-3">
-                            <article className="metric-card metric-warning">
-                                <div className="metric-top">
-                                    <span className="metric-label">Customers</span>
-                                    <span className="metric-icon"><i className="bi bi-people" aria-hidden="true"></i></span>
-                                </div>
-                                <div className="metric-value">8,742</div>
-                                <div className="metric-meta">
-                                    <span className="text-success">+5.1%</span>
-                                    <span>active users</span>
-                                </div>
-                            </article>
-                        </div>
-
-                        <div className="col-12 col-sm-6 col-xl-3">
-                            <article className="metric-card metric-danger">
-                                <div className="metric-top">
-                                    <span className="metric-label">Tickets</span>
-                                    <span className="metric-icon"><i className="bi bi-life-preserver" aria-hidden="true"></i></span>
-                                </div>
-                                <div className="metric-value">36</div>
-                                <div className="metric-meta">
-                                    <span className="text-danger">3 urgent</span>
-                                    <span>need review</span>
-                                </div>
-                            </article>
-                        </div>
-                    </section>
-
-                    <section className="row g-3 mt-1">
-                        <div className="col-12 col-xl-8">
-                            <div className="panel">
-                                <div className="panel-header">
-                                    <div>
-                                        <h2 className="h5 mb-1 section-title"><i className="bi bi-graph-up-arrow" aria-hidden="true"></i><span>Sales Performance</span></h2>
-                                        <p className="text-muted mb-0">Monthly revenue compared with operational targets.</p>
-                                    </div>
-                                    <a className="btn btn-light btn-sm" href="charts.html">View Details</a>
-                                </div>
-
-                                <div className="chart-bars" aria-label="Sales performance chart">
-                                    <div className="chart-column bar-42"><span></span><small>Jan</small></div>
-                                    <div className="chart-column bar-58"><span></span><small>Feb</small></div>
-                                    <div className="chart-column bar-51"><span></span><small>Mar</small></div>
-                                    <div className="chart-column bar-72"><span></span><small>Apr</small></div>
-                                    <div className="chart-column bar-66"><span></span><small>May</small></div>
-                                    <div className="chart-column bar-83"><span></span><small>Jun</small></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-xl-4">
-                            <div className="panel h-100">
-                                <div className="panel-header">
-                                    <div>
-                                        <h2 className="h5 mb-1 section-title"><i className="bi bi-activity" aria-hidden="true"></i><span>Team Activity</span></h2>
-                                        <p className="text-muted mb-0">Recent operational updates.</p>
-                                    </div>
-                                </div>
-
-                                <div className="activity-list">
-                                    <div className="activity-item"><span className="activity-dot bg-primary"></span><div><p className="mb-1 fw-semibold">New campaign launched</p><p className="text-muted small mb-0">Marketing team published the May offer.</p></div></div>
-                                    <div className="activity-item"><span className="activity-dot bg-success"></span><div><p className="mb-1 fw-semibold">Payment batch cleared</p><p className="text-muted small mb-0">246 invoices were processed successfully.</p></div></div>
-                                    <div className="activity-item"><span className="activity-dot bg-warning"></span><div><p className="mb-1 fw-semibold">Support queue rising</p><p className="text-muted small mb-0">Average first response time is 18 minutes.</p></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="panel mt-3">
-                        <div className="panel-header">
-                            <div>
-                                <h2 className="h5 mb-1 section-title"><i className="bi bi-people" aria-hidden="true"></i><span>Recent Users</span></h2>
-                                <p className="text-muted mb-0">Latest account activity across the workspace.</p>
-                            </div>
-                            <a className="btn btn-outline-secondary btn-sm" href="users.html">Manage Users</a>
-                        </div>
-                        <div className="table-responsive">
-                            <table className="table align-middle mb-0">
-                                <thead><tr><th scope="col">User</th><th scope="col">Role</th><th scope="col">Team</th><th scope="col">Status</th><th scope="col">Joined</th><th scope="col" className="text-end">Action</th></tr></thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div className="d-flex align-items-center gap-2">
-                                                <img className="avatar-img avatar-sm" src="../assets/images/avatar/avatar-1.jpg" alt="Sarah Ahmed" />
-                                                <div>
-                                                    <p className="fw-semibold mb-0">Sarah Ahmed</p>
-                                                    <p className="text-muted small mb-0">sarah@example.com</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Admin</td>
-                                        <td>Operations</td>
-                                        <td><span className="badge text-bg-success">Active</span></td>
-                                        <td>Jan 12, 2026</td>
-                                        <td className="text-end"><a className="btn btn-light btn-sm" href="user-details.html">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div className="d-flex align-items-center gap-2">
-                                                <img className="avatar-img avatar-sm" src="../assets/images/avatar/avatar-2.jpg" alt="Rafi Khan" />
-                                                <div>
-                                                    <p className="fw-semibold mb-0">Rafi Khan</p>
-                                                    <p className="text-muted small mb-0">rafi@example.com</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Manager</td>
-                                        <td>Sales</td>
-                                        <td><span className="badge text-bg-success">Active</span></td>
-                                        <td>Feb 03, 2026</td>
-                                        <td className="text-end"><a className="btn btn-light btn-sm" href="user-details.html">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div className="d-flex align-items-center gap-2">
-                                                <img className="avatar-img avatar-sm" src="../assets/images/avatar/avatar-3.jpg" alt="Nadia Islam" />
-                                                <div>
-                                                    <p className="fw-semibold mb-0">Nadia Islam</p>
-                                                    <p className="text-muted small mb-0">nadia@example.com</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Editor</td>
-                                        <td>Content</td>
-                                        <td><span className="badge text-bg-warning">Pending</span></td>
-                                        <td>Mar 18, 2026</td>
-                                        <td className="text-end"><a className="btn btn-light btn-sm" href="user-details.html">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div className="d-flex align-items-center gap-2">
-                                                <img className="avatar-img avatar-sm" src="../assets/images/avatar/avatar-4.jpg" alt="Mina Torres" />
-                                                <div>
-                                                    <p className="fw-semibold mb-0">Mina Torres</p>
-                                                    <p className="text-muted small mb-0">mina@example.com</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Viewer</td>
-                                        <td>Finance</td>
-                                        <td><span className="badge text-bg-secondary">Suspended</span></td>
-                                        <td>Apr 07, 2026</td>
-                                        <td className="text-end"><a className="btn btn-light btn-sm" href="user-details.html">View</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div className="d-flex align-items-center gap-2">
-                                                <img className="avatar-img avatar-sm" src="../assets/images/avatar/avatar-5.jpg" alt="Jon Oliver" />
-                                                <div>
-                                                    <p className="fw-semibold mb-0">Jon Oliver</p>
-                                                    <p className="text-muted small mb-0">jon@example.com</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Analyst</td>
-                                        <td>Data</td>
-                                        <td><span className="badge text-bg-success">Active</span></td>
-                                        <td>Apr 22, 2026</td>
-                                        <td className="text-end"><a className="btn btn-light btn-sm" href="user-details.html">View</a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
+                    </article>
                 </div>
-            </main>
+
+
+                {/* Total Members */}
+                <div className="col-12 col-sm-6 col-xl-3">
+                    <article className="metric-card metric-success">
+                        <div className="metric-top">
+                            <span className="metric-label"> Total Members</span>
+                            <span className="metric-icon">
+                                <i className="bi bi-people fs-4 text-success"></i>
+
+                            </span>
+                        </div>
+                        <div className="metric-value"> {dashboardStats.totalMembers}
+                        </div>
+                        <div className="mt-3">
+                            <Link to="/members" className="text-decoration-none small">
+                                View all members
+                                <i className="bi bi-arrow-right ms-1"></i>
+                            </Link>
+                        </div>
+                    </article>
+                </div>
+
+
+                {/* Issued Books */}
+                <div className="col-12 col-sm-6 col-xl-3">
+                    <article className="metric-card metric-warning">
+                        <div className="metric-top">
+                            <span className="metric-label"> Issued Books
+                            </span>
+                            <span className="metric-icon">
+                                <i className="bi bi-journal-arrow-up fs-4 text-warning"></i>
+
+                            </span>
+                        </div>
+                        <div className="metric-value"> {dashboardStats.issuedBooks}
+                        </div>
+                        <div className="mt-3">
+                            <Link to="/issues" className="text-decoration-none small">
+                                View issued books
+                                <i className="bi bi-arrow-right ms-1"></i>
+                            </Link>
+                        </div>
+                    </article>
+                </div>
+
+
+                {/* Total Fine */}
+                <div className="col-12 col-sm-6 col-xl-3">
+                    <article className="metric-card metric-danger">
+                        <div className="metric-top">
+                            <span className="metric-label"> Total Fine
+                            </span>
+                            <span className="metric-icon">
+                                <i className="bi bi-cash-coin fs-4 text-danger"></i>
+
+
+                            </span>
+                        </div>
+                        <div className="metric-value"> ৳{dashboardStats.totalFine}
+                        </div>
+                        <div className="mt-3">
+                            <Link to="/fine-payments" className="text-decoration-none small">
+                                View fine payments
+                                <i className="bi bi-arrow-right ms-1"></i>
+                            </Link>
+                        </div>
+                    </article>
+                </div>
+
+            </div>
+
+
+            {/* =========================
+                QUICK ACTIONS
+            ========================== */}
+            <div className="card border-0 shadow-sm mb-4">
+
+                <div className="card-body">
+
+                    <h5 className="card-title mb-3">
+                        Quick Actions
+                    </h5>
+
+                    <div className="row g-3">
+
+                        <div className="col-12 col-sm-6 col-lg-3">
+                            <Link
+                                to="/add-book"
+                                className="btn btn-outline-primary w-100 py-2"
+                            >
+                                <i className="bi bi-plus-circle me-2"></i>
+                                Add Book
+                            </Link>
+                        </div>
+
+                        <div className="col-12 col-sm-6 col-lg-3">
+                            <Link
+                                to="/add-member"
+                                className="btn btn-outline-success w-100 py-2"
+                            >
+                                <i className="bi bi-person-plus me-2"></i>
+                                Register Member
+                            </Link>
+                        </div>
+
+                        <div className="col-12 col-sm-6 col-lg-3">
+                            <Link
+                                to="/issues"
+                                className="btn btn-outline-warning w-100 py-2"
+                            >
+                                <i className="bi bi-journal-arrow-up me-2"></i>
+                                Issue Book
+                            </Link>
+                        </div>
+
+                        <div className="col-12 col-sm-6 col-lg-3">
+                            <Link
+                                to="/membership-payments"
+                                className="btn btn-outline-secondary w-100 py-2"
+                            >
+                                <i className="bi bi-credit-card me-2"></i>
+                                Payments
+                            </Link>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {/* =========================
+                RECENT ISSUES
+            ========================== */}
+            <div className="card border-0 shadow-sm mb-4">
+
+                <div className="card-body">
+
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+
+                        <h5 className="card-title mb-0">
+                            Recent Book Issues
+                        </h5>
+
+                        <Link
+                            to="/issues"
+                            className="btn btn-sm btn-outline-primary"
+                        >
+                            View All
+                        </Link>
+
+                    </div>
+
+                    <div className="table-responsive">
+
+                        <table className="table align-middle mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Book</th>
+                                    <th>Issue Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {recentIssues.map((issue) => (
+
+                                    <tr key={issue.id}>
+
+                                        <td>
+                                            {issue.member}
+                                        </td>
+
+                                        <td>
+                                            {issue.book}
+                                        </td>
+
+                                        <td>
+                                            {issue.issueDate}
+                                        </td>
+
+                                        <td>
+                                            {issue.dueDate}
+                                        </td>
+
+                                        <td>
+
+                                            {issue.status === "Issued" && (
+                                                <span className="badge text-bg-primary">
+                                                    Issued
+                                                </span>
+                                            )}
+
+                                            {issue.status === "Late" && (
+                                                <span className="badge text-bg-danger">
+                                                    Late
+                                                </span>
+                                            )}
+
+                                            {issue.status === "Returned" && (
+                                                <span className="badge text-bg-success">
+                                                    Returned
+                                                </span>
+                                            )}
+
+                                        </td>
+
+                                    </tr>
+
+                                ))}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {/* =========================
+                RECENT MEMBERS + FINE OVERVIEW
+            ========================== */}
+            <div className="row g-4">
+
+                {/* Recent Members */}
+                <div className="col-12 col-xl-8">
+
+                    <div className="card border-0 shadow-sm h-100">
+
+                        <div className="card-body">
+
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+
+                                <h5 className="card-title mb-0">
+                                    Recent Members
+                                </h5>
+
+                                <Link
+                                    to="/members"
+                                    className="btn btn-sm btn-outline-primary"
+                                >
+                                    View All
+                                </Link>
+
+                            </div>
+
+                            <div className="table-responsive">
+
+                                <table className="table align-middle mb-0">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Joined Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        {recentMembers.map((member) => (
+
+                                            <tr key={member.id}>
+
+                                                <td>
+                                                    {member.name}
+                                                </td>
+
+                                                <td>
+                                                    {member.email}
+                                                </td>
+
+                                                <td>
+                                                    {member.joinedDate}
+                                                </td>
+
+                                                <td>
+
+                                                    {member.status === "Active" ? (
+                                                        <span className="badge text-bg-success">
+                                                            Active
+                                                        </span>
+                                                    ) : (
+                                                        <span className="badge text-bg-secondary">
+                                                            Inactive
+                                                        </span>
+                                                    )}
+
+                                                </td>
+
+                                            </tr>
+
+                                        ))}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {/* Fine Overview */}
+                <div className="col-12 col-xl-4">
+
+                    <div className="card border-0 shadow-sm h-100">
+
+                        <div className="card-body">
+
+                            <h5 className="card-title mb-4">
+                                Fine Overview
+                            </h5>
+
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+
+                                <div>
+                                    <span className="text-muted">
+                                        Paid
+                                    </span>
+                                </div>
+
+                                <strong className="text-success">
+                                    ৳1,500
+                                </strong>
+
+                            </div>
+
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+
+                                <div>
+                                    <span className="text-muted">
+                                        Unpaid
+                                    </span>
+                                </div>
+
+                                <strong className="text-warning">
+                                    ৳850
+                                </strong>
+
+                            </div>
+
+                            <div className="d-flex justify-content-between align-items-center mb-4">
+
+                                <div>
+                                    <span className="text-muted">
+                                        Overdue
+                                    </span>
+                                </div>
+
+                                <strong className="text-danger">
+                                    12
+                                </strong>
+
+                            </div>
+
+                            <Link
+                                to="/fine-payments"
+                                className="btn btn-outline-danger w-100"
+                            >
+                                <i className="bi bi-cash-coin me-2"></i>
+                                Manage Fine Payments
+                            </Link>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </>
     );
 }
