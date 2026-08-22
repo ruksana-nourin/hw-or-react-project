@@ -1,14 +1,15 @@
-import { Link } from "react-router";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useState, useEffect } from "react";
 import PageHeading from "../../../components/PageHeading";
 import type { Issue } from "../../../interfaces/Issue";
-
+import { api } from "../../../config";
 function IssueBook() {
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState<
         Omit<Issue, "id">
     >({
-        issueCode: "ISS-0001",
+        issueCode: "",
 
         memberId: 0,
         memberCode: "",
@@ -30,6 +31,11 @@ function IssueBook() {
 
         fineStatus: "No Fine"
     });
+    const [errors, setErrors] = useState<any>({});
+    const [msg, setMsg] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [books, setBooks] = useState<any[]>([]);
+    const [issueCode, setIssueCode] = useState("");
 
     const handleChange = (
         e: React.ChangeEvent<
@@ -56,8 +62,105 @@ function IssueBook() {
 
         e.preventDefault();
 
-        console.log("Book Issue:", formData);
+        let newErrors: any = {};
+
+
+        if (formData.memberId == 0) {
+            newErrors.memberId =
+                "Member is required. Please select one";
+        } else {
+            newErrors.memberId = "";
+        }
+
+        if (formData.bookId == 0) {
+            newErrors.bookId =
+                "Book is required. Please select one";
+        } else {
+            newErrors.bookId = "";
+        }
+
+        if (formData.issueDate == "") {
+            newErrors.issueDate = "Issue Date is required";
+        } else {
+            newErrors.issueDate = "";
+        }
+
+        if (formData.dueDate == "") {
+            newErrors.dueDate = "Due Date is required";
+        } else {
+            newErrors.dueDate = "";
+        }
+
+        setErrors(newErrors);
+
+        if (
+            
+            newErrors.memberId == "" &&
+            newErrors.bookId == "" &&
+            newErrors.issueDate == "" &&
+            newErrors.dueDate == ""
+        ) {
+
+            const issueData = {
+                issueCode: issueCode,
+                memberId: formData.memberId,
+                bookId: formData.bookId,
+                issueDate: formData.issueDate,
+                dueDate: formData.dueDate
+            };
+
+            console.log(issueData);
+
+            api.post("issue-create", issueData)
+                .then((res) => {
+                    console.log(res);
+
+                    if (res.status == 200 || res.status == 201) {
+                        setMsg(true);
+                        setSuccess(true);
+
+                        navigate("/issued-books");
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+
+                    setMsg(true);
+                    setSuccess(false);
+                });
+        }
     };
+
+    useEffect(() => {
+
+        api.get("books")
+            .then((res) => {
+                console.log(res);
+                setBooks(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+    }, []);
+
+    useEffect(() => {
+
+        api.get("issue-code")
+            .then((res) => {
+
+                console.log(res);
+
+                if (res.data.success) {
+                    setIssueCode(res.data.issueCode);
+                }
+
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+    }, []);
 
     return (
         <>
@@ -90,6 +193,7 @@ function IssueBook() {
                                     {/* Issue Code */}
                                     <div className="col-12 col-md-6">
 
+
                                         <label className="form-label">
                                             Issue Code
                                         </label>
@@ -97,11 +201,10 @@ function IssueBook() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            name="issueCode"
-                                            value={formData.issueCode}
-                                            onChange={handleChange}
-                                            required
+                                            value={issueCode}
+                                            readOnly
                                         />
+
 
                                     </div>
 
@@ -177,13 +280,16 @@ function IssueBook() {
                                                 Select Book
                                             </option>
 
-                                            <option value={1}>
-                                                Clean Code
-                                            </option>
-
-                                            <option value={2}>
-                                                Atomic Habits
-                                            </option>
+                                            {books
+                                                .filter((book) => book.status === "Available")
+                                                .map((book) => (
+                                                    <option
+                                                        key={book.id}
+                                                        value={book.id}
+                                                    >
+                                                        {book.title} - {book.isbn}
+                                                    </option>
+                                                ))}
 
                                         </select>
 

@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import PageHeading from "../../../components/PageHeading";
 import type { Author } from "../../../interfaces/Author";
+import { api } from "../../../config";
 
 function AddAuthor() {
 
@@ -13,6 +14,9 @@ function AddAuthor() {
         phone: "",
         status: "Active"
     });
+    const [errors, setErrors] = useState<any>({});
+    const [msg, setMsg] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -30,10 +34,67 @@ function AddAuthor() {
     ) => {
         e.preventDefault();
 
-        console.log("New Author:", formData);
+        let newErrors: any = {};
 
-        // Frontend only for now
-        navigate("/authors");
+        if (formData.name == "") {
+            newErrors.name = "Name is required";
+        } else if (
+            formData.name.length > 100 ||
+            formData.name.length < 3
+        ) {
+            newErrors.name =
+                "Name must be between 3 and 100 characters";
+        } else {
+            newErrors.name = "";
+        }
+
+        if (formData.email == "") {
+            newErrors.email = "Email is required";
+        } else {
+            newErrors.email = "";
+        }
+
+        if (formData.phone == "") {
+            newErrors.phone = "Phone is required";
+        } else {
+            newErrors.phone = "";
+        }
+
+        setErrors(newErrors);
+
+        if (
+            newErrors.name == "" &&
+            newErrors.email == "" &&
+            newErrors.phone == ""
+        ) {
+            api.post("author-create", formData)
+                .then((res) => {
+                    console.log(res);
+
+                    if (
+                        res.status == 200 ||
+                        res.status == 201
+                    ) {
+                        setMsg(true);
+                        setSuccess(true);
+
+                        setFormData({
+                            name: "",
+                            email: "",
+                            phone: "",
+                            status: "Active"
+                        });
+
+                        navigate("/authors");
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+
+                    setMsg(true);
+                    setSuccess(false);
+                });
+        }
     };
 
     return (
@@ -80,6 +141,11 @@ function AddAuthor() {
                                             onChange={handleChange}
                                             required
                                         />
+                                        {errors.name && (
+                                            <div className="text-danger small mt-1">
+                                                {errors.name}
+                                            </div>
+                                        )}
 
                                     </div>
 
@@ -99,6 +165,11 @@ function AddAuthor() {
                                             onChange={handleChange}
                                             required
                                         />
+                                        {errors.email && (
+                                            <div className="text-danger small mt-1">
+                                                {errors.email}
+                                            </div>
+                                        )}
 
                                     </div>
 
@@ -118,6 +189,11 @@ function AddAuthor() {
                                             onChange={handleChange}
                                             required
                                         />
+                                        {errors.phone && (
+                                            <div className="text-danger small mt-1">
+                                                {errors.phone}
+                                            </div>
+                                        )}
 
                                     </div>
 

@@ -11,6 +11,8 @@ import PostManage from "./views/pages/post/PostManage";
 import PostCreate from "./views/pages/post/PostCreate";
 import PostEdit from "./views/pages/post/PostEdit";
 import PostDetails from "./views/pages/post/PostDetails";
+import ProductCreate from "./views/pages/product/ProductCreate";
+import ProductManage from "./views/pages/product/ProductManage";
 
 export const routes = createBrowserRouter([
   {
@@ -36,6 +38,14 @@ export const routes = createBrowserRouter([
       {
         path: "/user-details/:id",
         element: <UserDetails />
+      },
+      {
+        path: "/product",
+        element: <ProductManage />
+      },
+      {
+        path: "/product-create",
+        element: <ProductCreate />
       },
       {
         path: "/post",

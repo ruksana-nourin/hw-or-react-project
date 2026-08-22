@@ -1,5 +1,6 @@
 import { Link } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "../../../config";
 import PageHeading from "../../../components/PageHeading";
 import type { Author } from "../../../interfaces/Author";
 
@@ -8,41 +9,36 @@ function AuthorList() {
     const [searchTerm, setSearchTerm] = useState("");
     const [deleteAuthor, setDeleteAuthor] = useState<Author | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [authors, setAuthors] = useState<Author[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const authors: Author[] = [
-        {
-            id: 1,
-            name: "Robert C. Martin",
-            email: "robert@example.com",
-            phone: "+1 555-1001",
-            booksCount: 12,
-            status: "Active"
-        },
-        {
-            id: 2,
-            name: "James Clear",
-            email: "james@example.com",
-            phone: "+1 555-1002",
-            booksCount: 8,
-            status: "Active"
-        },
-        {
-            id: 3,
-            name: "J. K. Rowling",
-            email: "jk@example.com",
-            phone: "+1 555-1003",
-            booksCount: 15,
-            status: "Active"
-        },
-        {
-            id: 4,
-            name: "George Orwell",
-            email: "george@example.com",
-            phone: "+1 555-1004",
-            booksCount: 7,
-            status: "Inactive"
-        }
-    ];
+    useEffect(() => {
+        loadAuthors();
+    }, []);
+
+   const loadAuthors = async () => {
+    try {
+        const response = await api.get("authors");
+
+        console.log("Authors API:", response.data);
+
+        const mappedAuthors: Author[] = response.data.map((author: any) => ({
+            id: Number(author.id),
+            name: author.name,
+            email: author.email,
+            phone: author.phone,
+            booksCount: 0,
+            status: author.status_id === "1" ? "Active" : "Inactive",
+        }));
+
+        setAuthors(mappedAuthors);
+
+    } catch (error) {
+        console.error("Author load error:", error);
+    } finally {
+        setLoading(false);
+    }
+};
 
     const filteredAuthors = authors.filter((author) =>
         author.name
@@ -66,6 +62,13 @@ function AuthorList() {
         setDeleteAuthor(null);
     };
 
+    if (loading) {
+        return (
+            <div className="p-4">
+                Loading authors...
+            </div>
+        );
+    }
     return (
         <>
             <main className="dashboard-content">
@@ -116,6 +119,8 @@ function AuthorList() {
                         </div>
 
                     </div>
+
+
 
                     {/* Author Table */}
                     <div className="card shadow-sm border-0 mt-4">

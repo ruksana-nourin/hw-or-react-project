@@ -28,7 +28,7 @@ function UserCreate() {
   // }, [user]);
 
   function getRoles() {
-    api .get("roles")
+    api.get("roles")
       .then((res) => {
         // console.log(res.data);
         setRoles(res.data)

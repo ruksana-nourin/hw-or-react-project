@@ -67,6 +67,7 @@ function UserManage() {
               <table className="table align-middle mb-0" id="usersTable" data-searchable-table="">
                 <thead>
                   <tr>
+                    <th scope="col">SL</th>
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
@@ -75,8 +76,9 @@ function UserManage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((item) => (
+                  {users.map((item,index) => (
                     <tr key={item.id}>
+                      <td>{index+1}</td>
                       <td>{item.id}</td>
                       <td>{item.name}</td>
                       <td>{item.email}</td>

@@ -1,63 +1,116 @@
 import { Link } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageHeading from "../../../components/PageHeading";
+import type { Book } from "../../../interfaces/Book";
+import { defaultBook } from "../../../interfaces/Book";
+import type { Author } from "../../../interfaces/Author";
+import type { Category } from "../../../interfaces/Category";
+import type { Publisher } from "../../../interfaces/Publisher";
+
+
+
+import { api } from "../../../config";
+
+
 
 function AddBook() {
-    const [formData, setFormData] = useState({
-        title: "",
-        isbn: "",
-        author: "",
-        category: "",
-        publisher: "",
-        copies: 1,
-        status: "Available",
-        cover: "",
-    });
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-        const { name, value } = e.target;
+    const [book, setBook] = useState<Book>(defaultBook);
 
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const [authors, setAuthors] = useState<Author[]>([]);
+    const [category, setCategory] = useState<Category[]>([]);
+    const [publisher, setPublisher] = useState<Publisher[]>([]);
 
-        if (!formData.title.trim()) {
-            alert("Please enter the book title.");
-            return;
-        }
 
-        if (!formData.isbn.trim()) {
-            alert("Please enter the ISBN.");
-            return;
-        }
 
-        if (!formData.author.trim()) {
-            alert("Please enter the author name.");
-            return;
-        }
+    function getAuthors() {
+        api.get("authors")
+            .then((res) => {
+                console.log(res.data);
+                setAuthors(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
 
-        if (!formData.category) {
-            alert("Please select a category.");
-            return;
-        }
 
-        if (!formData.publisher.trim()) {
-            alert("Please enter the publisher.");
-            return;
-        }
 
-        if (formData.copies < 1) {
-            alert("Total copies must be at least 1.");
-            return;
-        }
+    function getCategories() {
+        api.get("categories")
+            .then((res) => {
+                console.log(res.data);
+                setCategory(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
 
-        console.log("Book submitted:", formData);
-    };
+    function getPublishers() {
+        api.get("publishers")
+            .then((res) => {
+                console.log(res.data);
+                setPublisher(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    useEffect(() => {
+        getAuthors();
+        getCategories();
+        getPublishers();
+    }, []);
+
+
+
+
+    // const handleChange = (
+    //     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    // ) => {
+    //     const { name, value } = e.target;
+
+    //     setFormData((prev) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+
+    //     if (!formData.title.trim()) {
+    //         alert("Please enter the book title.");
+    //         return;
+    //     }
+
+    //     if (!formData.isbn.trim()) {
+    //         alert("Please enter the ISBN.");
+    //         return;
+    //     }
+
+    //     if (!formData.author.trim()) {
+    //         alert("Please enter the author name.");
+    //         return;
+    //     }
+
+    //     if (!formData.category) {
+    //         alert("Please select a category.");
+    //         return;
+    //     }
+
+    //     if (!formData.publisher.trim()) {
+    //         alert("Please enter the publisher.");
+    //         return;
+    //     }
+
+    //     if (formData.copies < 1) {
+    //         alert("Total copies must be at least 1.");
+    //         return;
+    //     }
+
+    //     console.log("Book submitted:", formData);
+    // };
     return (
         <>
             <main className="dashboard-content">
@@ -83,7 +136,7 @@ function AddBook() {
 
                         <div className="card-body">
 
-                            <form onSubmit={handleSubmit}>
+                            <form>
 
                                 <div className="row g-3">
 
@@ -98,8 +151,13 @@ function AddBook() {
                                             className="form-control"
                                             name="title"
                                             placeholder="Enter book title"
-                                            value={formData.title}
-                                            onChange={handleChange}
+                                            value={book.title}
+                                            onChange={(e) =>
+                                                setBook({
+                                                    ...book,
+                                                    title: e.target.value,
+                                                })
+                                            }
                                             required
                                         />
                                     </div>
@@ -115,8 +173,13 @@ function AddBook() {
                                             className="form-control"
                                             name="isbn"
                                             placeholder="Enter ISBN"
-                                            value={formData.isbn}
-                                            onChange={handleChange}
+                                            value={book.isbn}
+                                            onChange={(e) =>
+                                                setBook({
+                                                    ...book,
+                                                    isbn: e.target.value,
+                                                })
+                                            }
                                             required
                                         />
                                     </div>
@@ -127,15 +190,28 @@ function AddBook() {
                                             Author
                                         </label>
 
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="author"
-                                            placeholder="Enter author name"
-                                            value={formData.author}
-                                            onChange={handleChange}
+                                        <select
+                                            className="form-select"
+                                            value={book.author_id}
+                                            onChange={(e) =>
+                                                setBook({
+                                                    ...book,
+                                                    author_id: Number(e.target.value),
+                                                })
+                                            }
                                             required
-                                        />
+                                        >
+                                            <option value={0} disabled>
+                                                Select author
+                                            </option>
+
+                                            {authors.map((author) => (
+                                                <option key={author.id} value={author.id}>
+                                                    {author.name}
+                                                </option>
+                                            ))}
+                                        </select>
+
                                     </div>
 
                                     {/* Category */}
@@ -146,22 +222,26 @@ function AddBook() {
 
                                         <select
                                             className="form-select"
-                                            name="category"
-                                            value={formData.category}
-                                            onChange={handleChange}
+                                            value={book.category_id}
+                                            onChange={(e) =>
+                                                setBook({
+                                                    ...book,
+                                                    category_id: Number(e.target.value),
+                                                })
+                                            }
                                             required
                                         >
-
-                                            <option value="">
+                                            <option value={0} disabled>
                                                 Select category
                                             </option>
-                                            <option value="Programming">
-                                                Programming
-                                            </option>
-                                            <option value="Self Development">
-                                                Self Development
-                                            </option>
+
+                                            {category.map((item) => (
+                                                <option key={item.id} value={item.id}>
+                                                    {item.name}
+                                                </option>
+                                            ))}
                                         </select>
+
                                     </div>
 
                                     {/* Publisher */}
@@ -170,15 +250,28 @@ function AddBook() {
                                             Publisher
                                         </label>
 
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="publisher"
-                                            placeholder="Enter publisher"
-                                            value={formData.publisher}
-                                            onChange={handleChange}
+                                        <select
+                                            className="form-select"
+                                            value={book.publisher_id}
+                                            onChange={(e) =>
+                                                setBook({
+                                                    ...book,
+                                                    publisher_id: Number(e.target.value),
+                                                })
+                                            }
                                             required
-                                        />
+                                        >
+                                            <option value={0} disabled>
+                                                Select publisher
+                                            </option>
+
+                                            {publisher.map((item) => (
+                                                <option key={item.id} value={item.id}>
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                        </select>
+
                                     </div>
 
                                     {/* Copies */}
@@ -192,12 +285,12 @@ function AddBook() {
                                             className="form-control"
                                             name="copies"
                                             min="1"
-                                            value={formData.copies}
+                                            value={book.copies}
                                             onChange={(e) =>
-                                                setFormData((prev) => ({
-                                                    ...prev,
+                                                setBook({
+                                                    ...book,
                                                     copies: Number(e.target.value),
-                                                }))
+                                                })
                                             }
                                             required
                                         />
@@ -211,20 +304,27 @@ function AddBook() {
 
                                         <select
                                             className="form-select"
-                                            name="status"
-                                            value={formData.status}
-                                            onChange={handleChange}
+                                            value={book.status_id}
+                                            onChange={(e) =>
+                                                setBook({
+                                                    ...book,
+                                                    status_id: Number(e.target.value),
+                                                })
+                                            }
                                         >
-                                            <option value="Available">
+                                            <option value={1}>
                                                 Available
                                             </option>
-                                            <option value="Issued">
+
+                                            <option value={2}>
                                                 Issued
                                             </option>
-                                            <option value="Reserved">
+
+                                            <option value={3}>
                                                 Reserved
                                             </option>
                                         </select>
+
                                     </div>
 
                                     {/* Cover */}
@@ -234,14 +334,19 @@ function AddBook() {
                                         </label>
 
                                         <input
-                                            type="text"
+                                            type="file"
                                             className="form-control"
-                                            name="cover"
-                                            placeholder="Enter cover image URL"
-                                            value={formData.cover}
-                                            onChange={handleChange}
+                                            name="cover_image"
+                                            accept="image/*"
+                                            onChange={(e) =>
+                                                setBook({
+                                                    ...book,
+                                                    cover_image: e.target.files?.[0] ?? null,
+                                                })
+                                            }
                                         />
                                     </div>
+
 
                                 </div>
 

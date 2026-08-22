@@ -2,6 +2,7 @@ import type { Book } from "../../../interfaces/Book";
 import PageHeading from "../../../components/PageHeading";
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
+import { api, basePath } from "../../../config";
 function BookList() {
     const [searchTerm, setSearchTerm] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("All");
@@ -15,32 +16,47 @@ function BookList() {
     }, [searchTerm, categoryFilter, statusFilter]);
 
 
-    const books: Book[] = [
-        {
-            id: 1,
-            title: "Clean Code",
-            isbn: "9780132350884",
-            author: "Robert C. Martin",
-            category: "Programming",
-            publisher: "Prentice Hall",
-            copies: 10,
-            availableCopies: 7,
-            status: "Available",
-            cover: "https://placehold.co/60x80"
-        },
-        {
-            id: 2,
-            title: "Atomic Habits",
-            isbn: "9780735211292",
-            author: "James Clear",
-            category: "Self Development",
-            publisher: "Avery",
-            copies: 5,
-            availableCopies: 0,
-            status: "Issued",
-            cover: "https://placehold.co/60x80"
-        }
-    ];
+    // const books: Book[] = [
+    //     {
+    //         id: 1,
+    //         title: "Clean Code",
+    //         isbn: "9780132350884",
+    //         author: "Robert C. Martin",
+    //         category: "Programming",
+    //         publisher: "Prentice Hall",
+    //         copies: 10,
+    //         availableCopies: 7,
+    //         status: "Available",
+    //         cover: "https://placehold.co/60x80"
+    //     },
+    //     {
+    //         id: 2,
+    //         title: "Atomic Habits",
+    //         isbn: "9780735211292",
+    //         author: "James Clear",
+    //         category: "Self Development",
+    //         publisher: "Avery",
+    //         copies: 5,
+    //         availableCopies: 0,
+    //         status: "Issued",
+    //         cover: "https://placehold.co/60x80"
+    //     }
+    // ];
+    const [books, setBooks] = useState<Book[]>([]);
+    const getBooks = () => {
+    api.get("books")
+        .then((res) => {
+            console.log(res.data);
+            setBooks(res.data);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+useEffect(() => {
+    getBooks();
+}, []);
+
     const filteredBooks = books.filter((book) => {
 
         const search = searchTerm.toLowerCase();
@@ -219,13 +235,12 @@ function BookList() {
 
                                                     {/* Cover */}
                                                     <td>
-                                                        <img
-                                                            src={book.cover}
-                                                            alt={book.title}
-                                                            width={50}
-                                                            height={70}
-                                                            className="rounded border"
-                                                        />
+                                                         {(book.cover != null && book.cover != "") ? (
+                                                            <img
+                                                                src={basePath + book.cover} width={50} height={50} alt={book.title} loading="lazy" />
+                                                        ):
+                                                    <div>Ok</div>
+                                                        }
                                                     </td>
 
                                                     {/* Book */}
@@ -252,7 +267,7 @@ function BookList() {
                                                             {book.availableCopies}
                                                         </span>
                                                         <span className="text-muted">
-                                                            {" / "}
+                                                            
                                                             {book.copies}
                                                         </span>
                                                     </td>

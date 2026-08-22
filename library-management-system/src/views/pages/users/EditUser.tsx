@@ -1,54 +1,125 @@
 import { Link, useParams } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "../../../config.ts";
+import { defaultUser, type User } from "../../../interfaces/User.ts";
 
 function EditUser() {
 
     const { id } = useParams();
-
-    // Temporary existing user data
-    // Later this data will come from API/database
-    const [formData, setFormData] = useState({
-        name: "Karim Hasan",
-        email: "karim@gmail.com",
-        phone: "01812345678",
-        role: "Librarian",
-        status: "Active",
-        department: "Library Operations",
-        address: "Dhaka, Bangladesh",
-        notes: "Responsible for daily library operations and book circulation.",
+    // existing user data
+    const [user, setUser] = useState<User>(defaultUser);
+    const [errors, setErrors] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        role_id: "",
+        status_id: "",
+        department_id: "",
     });
 
+    const [msg, setMsg] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const getUser = () => {
+        api
+            .get("user-details?id=" + id)
+            .then((res) => {
+                // console.log(res.data);
+                setUser(res.data)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    useEffect(() => {
+        getUser();
+    }, []);
 
     // Handle input changes
-    const handleChange = (
-        e: React.ChangeEvent<
-            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-        >
-    ) => {
+    // const handleChange = (
+    //     e: React.ChangeEvent<
+    //         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    //     >
+    // ) => {
 
-        const { name, value } = e.target;
+    //     const { name, value } = e.target;
 
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    //     setFormData((prev) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
 
 
     // Handle form submit
-    const handleSubmit = (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
+    function handleSubmit() {
+        let newErrors: any = {};
 
-        e.preventDefault();
+        if (user.name == "") {
+            newErrors.name = "Name is required";
+        } else if (user.name.length > 100 || user.name.length < 3) {
+            newErrors.name = "Name must be between 3 and 100 characters";
+        } else {
+            newErrors.name = "";
+        }
 
-        console.log("Updated User:", {
-            id,
-            ...formData,
-        });
+        if (user.email == "") {
+            newErrors.email = "Email is required";
+        } else {
+            newErrors.email = "";
+        }
 
-        alert("User updated successfully!");
-    };
+        if (user.phone == "") {
+            newErrors.phone = "Phone is required";
+        } else {
+            newErrors.phone = "";
+        }
+
+        if (user.role_id == 0) {
+            newErrors.role_id = "Role is required. Please select one";
+        } else {
+            newErrors.role_id = "";
+        }
+
+        if (user.status_id == 0) {
+            newErrors.status_id = "Status is required. Please select one";
+        } else {
+            newErrors.status_id = "";
+        }
+
+        if (user.department_id == 0) {
+            newErrors.department_id =
+                "Department is required. Please select one";
+        } else {
+            newErrors.department_id = "";
+        }
+
+        setErrors(newErrors);
+
+        if (
+            newErrors.name == "" &&
+            newErrors.email == "" &&
+            newErrors.phone == "" &&
+            newErrors.role_id == "" &&
+            newErrors.status_id == "" &&
+            newErrors.department_id == ""
+        ) {
+            api.put("user-update", user)
+                .then((res) => {
+                    console.log(res);
+
+                    if (res.status == 200 || res.status == 201) {
+                        setMsg(true);
+                        setSuccess(true);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setMsg(true);
+                    setSuccess(false);
+                });
+        }
+    }
+
 
 
     return (
@@ -121,11 +192,24 @@ function EditUser() {
                     <section className="row g-3">
 
                         <div className="col-12">
+                            {msg && (
+
+                                <div className={`alert alert-${success ? "success" : "danger"} alert-dismissible fade show mb-3`} role="alert">
+                                    {success ? "Data updated successfully!" : "Somthing went wrong! try later"}
+
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        data-bs-dismiss="alert"
+                                        aria-label="Close"
+                                        onClick={() => setMsg(false)}
+                                    ></button>
+                                </div>
+                            )}
 
                             <form
                                 className="panel needs-validation"
                                 noValidate
-                                onSubmit={handleSubmit}
                             >
 
 
@@ -179,14 +263,16 @@ function EditUser() {
                                             id="name"
                                             name="name"
                                             type="text"
-                                            value={formData.name}
-                                            onChange={handleChange}
+                                            value={user.name}
+                                            onChange={(e) => setUser({ ...user, name: e.target.value })}
                                             required
                                         />
 
                                         <div className="invalid-feedback">
                                             Name is required.
                                         </div>
+                                        <small className="text-danger">{errors.name}</small>
+
 
                                     </div>
 
@@ -207,8 +293,9 @@ function EditUser() {
                                             id="email"
                                             name="email"
                                             type="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
+                                            value={user.email}
+                                            onChange={(e) => setUser({ ...user, email: e.target.value })}
+
                                             required
                                         />
 
@@ -234,9 +321,10 @@ function EditUser() {
                                             className="form-control"
                                             id="phone"
                                             name="phone"
-                                            type="tel"
-                                            value={formData.phone}
-                                            onChange={handleChange}
+                                            type="text"
+                                            value={user.phone}
+                                            onChange={(e) => setUser({ ...user, phone: e.target.value })}
+
                                             required
                                         />
 
@@ -263,8 +351,9 @@ function EditUser() {
                                             id="address"
                                             name="address"
                                             type="text"
-                                            value={formData.address}
-                                            onChange={handleChange}
+                                            value={user.address}
+                                            onChange={(e) => setUser({ ...user, address: e.target.value })}
+
                                         />
 
                                     </div>
@@ -317,8 +406,9 @@ function EditUser() {
                                             className="form-select"
                                             id="role"
                                             name="role"
-                                            value={formData.role}
-                                            onChange={handleChange}
+                                            value={user.role}
+                                            onChange={(e) => setUser({ ...user, role_id: Number(e.target.value) })}
+
                                             required
                                         >
 
@@ -362,8 +452,8 @@ function EditUser() {
                                             className="form-select"
                                             id="status"
                                             name="status"
-                                            value={formData.status}
-                                            onChange={handleChange}
+                                            value={user.status}
+                                            onChange={(e) => setUser({ ...user, status_id: Number(e.target.value) })}
                                             required
                                         >
 
@@ -399,8 +489,8 @@ function EditUser() {
                                             className="form-select"
                                             id="department"
                                             name="department"
-                                            value={formData.department}
-                                            onChange={handleChange}
+                                            value={user.department}
+                                            onChange={(e) => setUser({ ...user, department_id: Number(e.target.value) })}
                                         >
 
                                             <option value="Library Operations">
@@ -447,8 +537,8 @@ function EditUser() {
                                         name="notes"
                                         rows={4}
                                         placeholder="Add optional notes about this user"
-                                        value={formData.notes}
-                                        onChange={handleChange}
+                                        value={user.notes}
+                                        onChange={(e) => setUser({ ...user, notes: e.target.value })}
                                     ></textarea>
 
                                 </div>
@@ -475,7 +565,8 @@ function EditUser() {
 
                                     <button
                                         className="btn btn-primary"
-                                        type="submit"
+                                        type="button"
+                                        onClick={handleSubmit}
                                     >
 
                                         <i

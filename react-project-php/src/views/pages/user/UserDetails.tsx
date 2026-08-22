@@ -29,8 +29,6 @@ function UserDetails() {
             icon="person-lines-fill"
             subtitle="Management"
             title="User Details"
-            desc= "View account information, permissions, and recent activity."
-
           >
             <Link className="btn btn-outline-secondary btn-sm" to="/user">
               <i className="bi bi-arrow-left" aria-hidden="true"></i> Back to
