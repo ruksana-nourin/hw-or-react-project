@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import PageHeading from "../../../components/PageHeading";
 import type { Issue } from "../../../interfaces/Issue";
+import { api } from "../../../config";
 
 function FinePayments() {
     const [showFinePayModal, setShowFinePayModal] = useState(false);
@@ -9,73 +10,94 @@ function FinePayments() {
         useState<{ id: number } | null>(null);
 
 
-    const [fines, setFines] = useState<Issue[]>([
-        {
-            id: 2,
-            issueCode: "ISS-0002",
+    const [fines, setFines] = useState<Issue[]>([]);
+    
+    useEffect(() => {
 
-            memberId: 2,
-            memberCode: "MEM-0002",
-            memberName: "Nusrat Jahan",
+    api.get("issues")
+        .then((res) => {
 
-            bookId: 2,
-            bookTitle: "Atomic Habits",
-            isbn: "9780735211292",
+            console.log("Fine API Response:", res.data);
 
-            issueDate: "2026-08-01",
-            dueDate: "2026-08-07",
-            returnDate: "2026-08-10",
+            const data = res.data;
 
-            status: "Late",
+            const fineRecords = data.filter(
+                (item: any) =>
+                    Number(item.fine_amount) > 0
+            );
 
-            fineAmount: 30,
-            fineStatus: "Unpaid"
-        },
+            console.log(
+                "FINE RECORDS:",
+                fineRecords
+            );
 
-        {
-            id: 4,
-            issueCode: "ISS-0004",
+            const mappedFines: Issue[] =
+                fineRecords.map((item: any) => ({
 
-            memberId: 4,
-            memberCode: "MEM-0004",
-            memberName: "Ayesha Rahman",
+                    id: Number(item.id),
 
-            bookId: 4,
-            bookTitle: "JavaScript: The Good Parts",
-            isbn: "9780596517748",
+                    issueCode: item.issue_code,
 
-            issueDate: "2026-08-02",
-            dueDate: "2026-08-08",
-            returnDate: "2026-08-12",
+                    memberId:
+                        Number(item.member_id),
 
-            status: "Late",
+                    memberCode:
+                        item.member_code,
 
-            fineAmount: 40,
-            fineStatus: "Unpaid"
-        },
+                    memberName:
+                        item.member_name,
 
-        {
-            id: 5,
-            issueCode: "ISS-0005",
+                    bookId:
+                        Number(item.book_id),
 
-            memberId: 5,
-            memberCode: "MEM-0005",
-            memberName: "Sadia Rahman",
+                    bookTitle:
+                        item.book_title,
 
-            bookId: 5,
-            bookTitle: "The Pragmatic Programmer",
-            isbn: "9780135957059",
+                    isbn:
+                        item.isbn,
 
-            issueDate: "2026-07-20",
-            dueDate: "2026-07-27",
-            returnDate: "2026-07-30",
+                    issueDate:
+                        item.issue_date,
 
-            status: "Late",
+                    dueDate:
+                        item.due_date,
 
-            fineAmount: 30,
-            fineStatus: "Paid"
-        }
-    ]);
+                    returnDate:
+                        item.return_date || "",
+
+                    status:
+                        Number(item.status_id) === 3
+                            ? "Late"
+                            : Number(item.status_id) === 2
+                                ? "Returned"
+                                : "Issued",
+
+                    fineAmount:
+                        Number(item.fine_amount),
+
+                    fineStatus:
+                        "Unpaid"
+
+                }));
+
+            console.log(
+                "MAPPED FINE RECORDS:",
+                mappedFines
+            );
+
+            setFines(mappedFines);
+
+        })
+        .catch((err) => {
+
+            console.log(
+                "Fine API Error:",
+                err
+            );
+
+        });
+
+}, []);
 
     const handleFinePayment = (id: number) => {
 
@@ -102,7 +124,7 @@ function FinePayments() {
 
     const [searchTerm, setSearchTerm] = useState("");
 
-    
+
     const filteredFines = fines.filter((fine) =>
         fine.memberName
             .toLowerCase()

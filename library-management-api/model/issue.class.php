@@ -44,7 +44,7 @@ class Issue
 
         $row = $result->fetch_assoc();
 
-        $nextId = ((int)$row['max_id']) + 1;
+        $nextId = ((int) $row['max_id']) + 1;
 
         // Generate issue code
         $issueCode = "ISS-" . str_pad(
@@ -145,7 +145,7 @@ class Issue
 
         $row = $result->fetch_assoc();
 
-        $nextId = ((int)$row['max_id']) + 1;
+        $nextId = ((int) $row['max_id']) + 1;
 
         $issueCode = "ISS-" . str_pad(
             $nextId,
@@ -157,6 +157,81 @@ class Issue
         return [
             "success" => true,
             "issueCode" => $issueCode
+        ];
+    }
+    public static function getById($id)
+    {
+        global $db;
+
+        $sql = "SELECT
+            i.id,
+            i.issue_code,
+            i.member_id,
+            m.member_code,
+            m.name AS member_name,
+            i.book_id,
+            b.title AS book_title,
+            b.isbn,
+            i.issue_date,
+            i.due_date,
+            i.return_date,
+            i.status_id,
+            i.fine_amount
+        FROM issues i, members m, books b
+        WHERE i.member_id = m.id
+        AND i.book_id = b.id
+        AND i.id = '$id'
+        LIMIT 1";
+
+        $result = $db->query($sql);
+
+        if (!$result) {
+            return [
+                "success" => false,
+                "message" => $db->error
+            ];
+        }
+
+        if ($result->num_rows == 0) {
+            return [
+                "success" => false,
+                "message" => "Issue not found"
+            ];
+        }
+
+        return [
+            "success" => true,
+            "data" => $result->fetch_assoc()
+        ];
+    }
+    public function returnBook(
+        $returnDate,
+        $fineAmount,
+        $statusId
+    ) {
+        global $db;
+
+        $sql = "UPDATE issues
+            SET
+                return_date = '$returnDate',
+                status_id = '$statusId',
+                fine_amount = '$fineAmount'
+            WHERE id = '$this->id'";
+
+        $result = $db->query($sql);
+
+        if ($result) {
+
+            return [
+                "success" => true,
+                "message" => "Book returned successfully"
+            ];
+
+        }
+
+        return [
+            "success" => false,
+            "message" => $db->error
         ];
     }
 }

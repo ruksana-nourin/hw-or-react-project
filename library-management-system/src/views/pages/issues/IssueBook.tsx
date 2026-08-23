@@ -35,6 +35,7 @@ function IssueBook() {
     const [msg, setMsg] = useState(false);
     const [success, setSuccess] = useState(false);
     const [books, setBooks] = useState<any[]>([]);
+    const [members, setMembers] = useState<any[]>([]);
     const [issueCode, setIssueCode] = useState("");
 
     const handleChange = (
@@ -94,7 +95,7 @@ function IssueBook() {
         setErrors(newErrors);
 
         if (
-            
+
             newErrors.memberId == "" &&
             newErrors.bookId == "" &&
             newErrors.issueDate == "" &&
@@ -113,17 +114,22 @@ function IssueBook() {
 
             api.post("issue-create", issueData)
                 .then((res) => {
-                    console.log(res);
+
+                    console.log("Create Response:", res);
 
                     if (res.status == 200 || res.status == 201) {
+
                         setMsg(true);
                         setSuccess(true);
 
-                        navigate("/issued-books");
+                        setTimeout(() => {
+                            navigate("/issued-books");
+                        }, 1500);
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+
+                    console.log("Create Error:", err);
 
                     setMsg(true);
                     setSuccess(false);
@@ -140,6 +146,14 @@ function IssueBook() {
             })
             .catch((err) => {
                 console.log(err);
+            });
+        api.get("members")
+            .then((res) => {
+                console.log("Members:", res.data);
+                setMembers(res.data);
+            })
+            .catch((err) => {
+                console.log("Members Error:", err);
             });
 
     }, []);
@@ -159,6 +173,7 @@ function IssueBook() {
             .catch((err) => {
                 console.log(err);
             });
+
 
     }, []);
 
@@ -185,6 +200,17 @@ function IssueBook() {
                     <div className="card shadow-sm border-0 mt-4">
 
                         <div className="card-body">
+                            {msg && (
+                                <div
+                                    className={`alert ${success ? "alert-success" : "alert-danger"
+                                        }`}
+                                    role="alert"
+                                >
+                                    {success
+                                        ? "Issue Book successfully created."
+                                        : "Failed to issue book. Please try again."}
+                                </div>
+                            )}
 
                             <form onSubmit={handleSubmit}>
 
@@ -245,17 +271,14 @@ function IssueBook() {
                                                 Select Member
                                             </option>
 
-                                            <option value={1}>
-                                                MEM-0001 - Ruksana Nourin
-                                            </option>
-
-                                            <option value={2}>
-                                                MEM-0002 - Nusrat Jahan
-                                            </option>
-
-                                            <option value={3}>
-                                                MEM-0003 - Sadia Rahman
-                                            </option>
+                                            {members.map((member) => (
+                                                <option
+                                                    key={member.id}
+                                                    value={member.id}
+                                                >
+                                                    {member.member_code} - {member.name}
+                                                </option>
+                                            ))}
 
                                         </select>
 

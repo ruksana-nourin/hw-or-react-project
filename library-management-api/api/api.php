@@ -28,6 +28,7 @@ foreach (glob("*-api.php") as $apiFile) {
 if (isset($_GET['endpoint'])) {
     $endpoint = $_GET['endpoint'];
     $method = $_SERVER['REQUEST_METHOD'];
+    $id = $_GET['id'] ?? null;
 
     //user endpoint
     // GET    users
@@ -107,9 +108,18 @@ if (isset($_GET['endpoint'])) {
     }
 
     //members
+    elseif ($endpoint == 'members' && $method == 'GET') {
+
+        getMembers();
+
+    }
 
     //issues
-    elseif ($endpoint == 'issues' && $method == 'GET') {
+    elseif ($endpoint == 'issue' && $method == 'GET' && $id) {
+
+        getIssueById($id);
+
+    } elseif ($endpoint == 'issues' && $method == 'GET') {
 
         getIssues();
     } elseif ($endpoint == 'issue-create' && $method == 'POST') {
@@ -121,8 +131,11 @@ if (isset($_GET['endpoint'])) {
 
         createIssue($data);
     } elseif ($endpoint == 'issue-code' && $method == 'GET') {
-
         getNextIssueCode();
+    } elseif ($endpoint == 'issue-return' && $method == 'POST') {
+        $data = json_decode(file_get_contents("php://input"), true);
+        returnIssue($data);
+
     }
 } else {
     http_response_code(404);

@@ -22,7 +22,34 @@ function createIssue($data)
     echo json_encode($issue->create());
 }
 
+function getIssueById($id)
+{
+    echo json_encode(Issue::getById($id));
+}
+
 function getNextIssueCode()
 {
     echo json_encode(Issue::getNextIssueCode());
+}
+function returnIssue($data)
+{
+    $issue = new Issue(
+        $data['id'],
+        "",
+        0,
+        0,
+        "",
+        "",
+        "",
+        0,
+        $data['fineAmount']
+    );
+
+    echo json_encode(
+        $issue->returnBook(
+            $data['returnDate'],
+            $data['fineAmount'],
+            $data['statusId']
+        )
+    );
 }

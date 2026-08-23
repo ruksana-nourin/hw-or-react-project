@@ -1,60 +1,15 @@
-import { Link, useParams } from "react-router";
-import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router";
+import { useEffect, useState } from "react";
 import PageHeading from "../../../components/PageHeading";
 import type { Issue } from "../../../interfaces/Issue";
+import { api } from "../../../config";
 
 function ReturnBook() {
+    const navigate = useNavigate();
 
     const { id } = useParams();
 
-    const issues: Issue[] = [
-        {
-            id: 1,
-            issueCode: "ISS-0001",
-
-            memberId: 1,
-            memberCode: "MEM-0001",
-            memberName: "Ruksana Nourin",
-
-            bookId: 1,
-            bookTitle: "Clean Code",
-            isbn: "9780132350884",
-
-            issueDate: "2026-08-10",
-            dueDate: "2026-08-17",
-            returnDate: "",
-
-            status: "Issued",
-
-            fineAmount: 0,
-            fineStatus: "No Fine"
-        },
-        {
-            id: 2,
-            issueCode: "ISS-0002",
-
-            memberId: 2,
-            memberCode: "MEM-0002",
-            memberName: "Nusrat Jahan",
-
-            bookId: 2,
-            bookTitle: "Atomic Habits",
-            isbn: "9780735211292",
-
-            issueDate: "2026-08-08",
-            dueDate: "2026-08-15",
-            returnDate: "",
-
-            status: "Issued",
-
-            fineAmount: 0,
-            fineStatus: "No Fine"
-        }
-    ];
-
-    const issue = issues.find(
-        (item) => item.id === Number(id)
-    );
+    const [issue, setIssue] = useState<Issue | null>(null);
 
     const [returnDate, setReturnDate] = useState(
         new Date().toISOString().split("T")[0]
@@ -66,14 +21,78 @@ function ReturnBook() {
         "No Fine" | "Unpaid" | "Paid"
     >("No Fine");
 
-    const calculateFine = (
-        selectedReturnDate: string
-    ) => {
 
-        if (!issue) return;
+
+    // api calling
+    useEffect(() => {
+
+        if (!id) {
+            return;
+        }
+
+        api.get(`issue?id=${id}`)
+            .then((res) => {
+
+                console.log("API Response:", res.data);
+
+                if (res.data.success) {
+
+                    const data = res.data.data;
+
+                    const mappedIssue: Issue = {
+                        id: Number(data.id),
+
+                        issueCode: data.issue_code,
+
+                        memberId: Number(data.member_id),
+                        memberCode: data.member_code,
+                        memberName: data.member_name,
+
+                        bookId: Number(data.book_id),
+                        bookTitle: data.book_title,
+                        isbn: data.isbn,
+
+                        issueDate: data.issue_date,
+                        dueDate: data.due_date,
+                        returnDate: data.return_date || "",
+
+                        status:
+                            data.status_id == 2
+                                ? "Returned"
+                                : data.status_id == 3
+                                    ? "Late"
+                                    : "Issued",
+
+                        fineAmount: Number(data.fine_amount),
+
+                        fineStatus:
+                            Number(data.fine_amount) > 0
+                                ? "Unpaid"
+                                : "No Fine"
+                    };
+
+                    console.log("Mapped Issue:", mappedIssue);
+
+                    setIssue(mappedIssue);
+                }
+
+            })
+            .catch((err) => {
+
+                console.log("Issue Error:", err);
+
+            });
+
+    }, [id]);
+
+    useEffect(() => {
+
+        if (!issue) {
+            return;
+        }
 
         const due = new Date(issue.dueDate);
-        const returned = new Date(selectedReturnDate);
+        const returned = new Date(returnDate);
 
         const difference =
             returned.getTime() - due.getTime();
@@ -84,10 +103,7 @@ function ReturnBook() {
 
         if (lateDays > 0) {
 
-            const dailyFine = 10;
-            const totalFine = lateDays * dailyFine;
-
-            setFineAmount(totalFine);
+            setFineAmount(lateDays * 10);
             setFineStatus("Unpaid");
 
         } else {
@@ -95,32 +111,9 @@ function ReturnBook() {
             setFineAmount(0);
             setFineStatus("No Fine");
         }
-    };
 
-    const handleReturnDateChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    }, [issue, returnDate]);
 
-        const value = e.target.value;
-
-        setReturnDate(value);
-
-        calculateFine(value);
-    };
-
-    const handleSubmit = (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
-
-        e.preventDefault();
-
-        console.log("Return Book:", {
-            issue,
-            returnDate,
-            fineAmount,
-            fineStatus
-        });
-    };
 
     if (!issue) {
 
@@ -173,6 +166,59 @@ function ReturnBook() {
             </>
         );
     }
+
+
+    const handleReturnDateChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+
+        setReturnDate(e.target.value);
+    };
+
+    const handleSubmit = (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+        e.preventDefault();
+
+        if (!returnDate) {
+            alert("Return date is required");
+            return;
+        }
+
+        const issueData = {
+            id: issue.id,
+            returnDate: returnDate,
+            fineAmount: fineAmount,
+            fineStatus: fineStatus,
+            statusId: returnDate > issue.dueDate ? 3 : 2
+        };
+
+        console.log("Return Data:", issueData);
+
+        api.post("issue-return", issueData)
+            .then((res) => {
+
+                console.log("Return Response:", res);
+
+                if (res.status == 200 || res.status == 201) {
+
+                    alert("Book returned successfully");
+
+                    navigate("/issued-books");
+                }
+
+            })
+            .catch((err) => {
+
+                console.log("Return Error:", err);
+
+                alert("Failed to return book");
+
+            });
+    };
+
+
+
 
     return (
         <div className="container-fluid">

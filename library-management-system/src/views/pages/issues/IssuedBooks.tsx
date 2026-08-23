@@ -198,7 +198,14 @@ function IssuedBooks() {
 
                                                     <td>
 
-                                                        <span className="badge bg-primary">
+                                                        <span
+                                                            className={`badge ${issue.status === "Returned"
+                                                                    ? "bg-success"
+                                                                    : issue.status === "Late"
+                                                                        ? "bg-danger"
+                                                                        : "bg-primary"
+                                                                }`}
+                                                        >
                                                             {issue.status}
                                                         </span>
 
