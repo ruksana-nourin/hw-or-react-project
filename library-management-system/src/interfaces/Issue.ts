@@ -17,5 +17,5 @@ export interface Issue {
     status: "Issued" | "Returned" | "Late";
 
     fineAmount: number;
-    fineStatus: "No Fine" | "Unpaid" | "Paid";
+    fineStatus: "No Fine" | "Unpaid" | "Paid" | "Partial";
 }

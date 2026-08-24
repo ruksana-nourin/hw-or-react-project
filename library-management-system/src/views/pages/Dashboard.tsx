@@ -1,83 +1,195 @@
 import { Link } from "react-router";
+import { useEffect, useState } from "react";
 import PageHeading from "../../components/PageHeading";
-
+import { api } from "../../config";
+import type { Issue } from "../../interfaces/Issue";
+import type { Member } from "../../interfaces/Member";
 function Dashboard() {
+    const [totalBooks, setTotalBooks] = useState(0);
+    const [totalMembers, setTotalMembers] = useState(0);
+    const [issuedBooks, setIssuedBooks] = useState(0);
+    const [totalFine, setTotalFine] = useState(0);
+    const [recentIssues, setRecentIssues] = useState<Issue[]>([]);
+    const [recentMembers, setRecentMembers] = useState<Member[]>([]);
+    const [paidFine, setPaidFine] = useState(0);
+    const [unpaidFine, setUnpaidFine] = useState(0);
+    const [lateReturns, setLateReturns] = useState(0);
 
-    // Dashboard mock data
-    const dashboardStats = {
-        totalBooks: 250,
-        totalMembers: 120,
-        issuedBooks: 45,
-        totalFine: 2350,
+
+    //books
+    const getBooks = () => {
+
+        api.get("books")
+            .then((res) => {
+
+                console.log("Books:", res.data);
+
+                setTotalBooks(res.data.length);
+
+            })
+            .catch((err) => {
+
+                console.log("Books Error:", err);
+
+            });
     };
+    //members
+    const getMembers = () => {
 
-    // Recent book issues
-    const recentIssues = [
-        {
-            id: 1,
-            member: "Rani",
-            book: "Clean Code",
-            issueDate: "10 Aug 2026",
-            dueDate: "17 Aug 2026",
-            status: "Issued",
-        },
-        {
-            id: 2,
-            member: "Karim",
-            book: "Atomic Habits",
-            issueDate: "09 Aug 2026",
-            dueDate: "16 Aug 2026",
-            status: "Issued",
-        },
-        {
-            id: 3,
-            member: "Nadia",
-            book: "JavaScript: The Good Parts",
-            issueDate: "05 Aug 2026",
-            dueDate: "12 Aug 2026",
-            status: "Late",
-        },
-        {
-            id: 4,
-            member: "Sakib",
-            book: "The Pragmatic Programmer",
-            issueDate: "03 Aug 2026",
-            dueDate: "10 Aug 2026",
-            status: "Returned",
-        },
-    ];
+        api.get("members")
+            .then((res) => {
 
-    // Recent members
-    const recentMembers = [
-        {
-            id: 1,
-            name: "Rani",
-            email: "rani@gmail.com",
-            joinedDate: "10 Aug 2026",
-            status: "Active",
-        },
-        {
-            id: 2,
-            name: "Karim",
-            email: "karim@gmail.com",
-            joinedDate: "09 Aug 2026",
-            status: "Active",
-        },
-        {
-            id: 3,
-            name: "Nadia",
-            email: "nadia@gmail.com",
-            joinedDate: "07 Aug 2026",
-            status: "Active",
-        },
-        {
-            id: 4,
-            name: "Sakib",
-            email: "sakib@gmail.com",
-            joinedDate: "05 Aug 2026",
-            status: "Inactive",
-        },
-    ];
+                console.log("Members:", res.data);
+
+                const mappedMembers: Member[] = res.data.map(
+                    (item: any) => ({
+
+                        id: Number(item.id),
+
+                        memberCode: item.member_code,
+
+                        name: item.name,
+
+                        email: item.email,
+
+                        phone: item.phone,
+
+                        status:
+                            Number(item.status_id) === 1
+                                ? "Active"
+                                : "Inactive"
+
+                    })
+                );
+
+                setTotalMembers(mappedMembers.length);
+
+                setRecentMembers(
+                    mappedMembers.slice(0, 5)
+                );
+
+            })
+            .catch((err) => {
+
+                console.log("Members Error:", err);
+
+            });
+
+    };
+    //issued books
+    const getIssues = () => {
+
+        api.get("issues")
+            .then((res) => {
+
+                console.log("Issues:", res.data);
+
+                const issues = res.data;
+
+                const mappedIssues: Issue[] = issues.map(
+                    (item: any) => ({
+
+                        id: Number(item.id),
+
+                        issueCode: item.issue_code,
+
+                        memberId: Number(item.member_id),
+                        memberCode: item.member_code,
+                        memberName: item.member_name,
+
+                        bookId: Number(item.book_id),
+                        bookTitle: item.book_title,
+                        isbn: item.isbn,
+
+                        issueDate: item.issue_date,
+                        dueDate: item.due_date,
+                        returnDate: item.return_date || "",
+
+                        status:
+                            Number(item.status_id) === 2
+                                ? "Returned"
+                                : Number(item.status_id) === 3
+                                    ? "Late"
+                                    : "Issued",
+
+                        fineAmount:
+                            Number(item.fine_amount || 0),
+
+                        fineStatus:
+                            item.payment_status_name === "Paid"
+                                ? "Paid"
+                                : item.payment_status_name === "Partial"
+                                    ? "Partial"
+                                    : "Unpaid"
+                    })
+                );
+
+                setRecentIssues(mappedIssues.slice(0, 5));
+
+                const issued = issues.filter(
+                    (item: any) =>
+                        Number(item.status_id) === 1
+                );
+
+                const fine = issues.reduce(
+                    (total: number, item: any) =>
+                        total + Number(item.fine_amount || 0),
+                    0
+                );
+                const paid = issues
+                    .filter(
+                        (item: any) =>
+                            item.payment_status_name === "Paid"
+                    )
+                    .reduce(
+                        (total: number, item: any) =>
+                            total + Number(item.fine_amount || 0),
+                        0
+                    );
+
+                const unpaid = issues
+                    .filter(
+                        (item: any) =>
+                            item.payment_status_name === "Unpaid"
+                    )
+                    .reduce(
+                        (total: number, item: any) =>
+                            total + Number(item.fine_amount || 0),
+                        0
+                    );
+
+                const late = issues.filter(
+                    (item: any) =>
+                        Number(item.status_id) === 3
+                ).length;
+                
+                setIssuedBooks(issued.length);
+                setTotalFine(fine);
+
+                setPaidFine(paid);
+                setUnpaidFine(unpaid);
+                setLateReturns(late);
+
+
+            })
+            .catch((err) => {
+
+                console.log("Issues Error:", err);
+
+            });
+    };
+    //api calling
+    useEffect(() => {
+
+        getBooks();
+        getMembers();
+        getIssues();
+
+    }, []);
+
+
+
+
 
     return (
         <>
@@ -102,7 +214,7 @@ function Dashboard() {
                             <span className="metric-label">Total Books</span>
                             <span className="metric-icon"><i className="bi bi-book" aria-hidden="true"></i></span>
                         </div>
-                        <div className="metric-value"> {dashboardStats.totalBooks}</div>
+                        <div className="metric-value"> {totalBooks}</div>
                         <div className="mt-3">
                             <Link
                                 to="/books"
@@ -126,7 +238,7 @@ function Dashboard() {
 
                             </span>
                         </div>
-                        <div className="metric-value"> {dashboardStats.totalMembers}
+                        <div className="metric-value"> {totalMembers}
                         </div>
                         <div className="mt-3">
                             <Link to="/members" className="text-decoration-none small">
@@ -149,7 +261,7 @@ function Dashboard() {
 
                             </span>
                         </div>
-                        <div className="metric-value"> {dashboardStats.issuedBooks}
+                        <div className="metric-value"> {issuedBooks}
                         </div>
                         <div className="mt-3">
                             <Link to="/issues" className="text-decoration-none small">
@@ -173,7 +285,7 @@ function Dashboard() {
 
                             </span>
                         </div>
-                        <div className="metric-value"> ৳{dashboardStats.totalFine}
+                        <div className="metric-value"> ৳{totalFine}
                         </div>
                         <div className="mt-3">
                             <Link to="/fine-payments" className="text-decoration-none small">
@@ -290,11 +402,11 @@ function Dashboard() {
                                     <tr key={issue.id}>
 
                                         <td>
-                                            {issue.member}
+                                            {issue.memberName}
                                         </td>
 
                                         <td>
-                                            {issue.book}
+                                            {issue.bookTitle}
                                         </td>
 
                                         <td>
@@ -397,7 +509,7 @@ function Dashboard() {
                                                 </td>
 
                                                 <td>
-                                                    {member.joinedDate}
+                                                    {member.registrationDate}
                                                 </td>
 
                                                 <td>
@@ -446,12 +558,25 @@ function Dashboard() {
 
                                 <div>
                                     <span className="text-muted">
+                                        Total
+                                    </span>
+                                </div>
+
+                                <strong className="text-primary">
+                                    ৳{totalFine}
+                                </strong>
+
+                            </div>
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+
+                                <div>
+                                    <span className="text-muted">
                                         Paid
                                     </span>
                                 </div>
 
                                 <strong className="text-success">
-                                    ৳1,500
+                                    ৳{paidFine}
                                 </strong>
 
                             </div>
@@ -465,7 +590,7 @@ function Dashboard() {
                                 </div>
 
                                 <strong className="text-warning">
-                                    ৳850
+                                    ৳{unpaidFine}
                                 </strong>
 
                             </div>
@@ -479,7 +604,7 @@ function Dashboard() {
                                 </div>
 
                                 <strong className="text-danger">
-                                    12
+                                    {lateReturns}
                                 </strong>
 
                             </div>

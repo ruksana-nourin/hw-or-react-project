@@ -64,7 +64,52 @@ function AddBook() {
     }, []);
 
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
+        e.preventDefault();
+
+        const data = new FormData();
+
+        data.append("title", book.title);
+        data.append("isbn", book.isbn);
+        data.append("author_id", String(book.author_id));
+        data.append("category_id", String(book.category_id));
+        data.append("publisher_id", String(book.publisher_id));
+        data.append("total_copies", String(book.copies));
+        data.append("status_id", String(book.status_id));
+
+        if (book.cover_image) {
+            data.append("cover_image", book.cover_image);
+        }
+
+        console.log("Book FormData:");
+
+        for (const [key, value] of data.entries()) {
+            console.log(key, value);
+        }
+
+        api.post("book-create", data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+            .then((res) => {
+
+                console.log("Book Create Response:", res.data);
+
+                alert("Book added successfully");
+
+                setBook(defaultBook);
+
+            })
+            .catch((err) => {
+
+                console.log("Book Create Error:", err);
+
+                alert("Failed to add book");
+
+            });
+    };
 
     // const handleChange = (
     //     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -136,7 +181,7 @@ function AddBook() {
 
                         <div className="card-body">
 
-                            <form>
+                            <form onSubmit={handleSubmit}>
 
                                 <div className="row g-3">
 

@@ -98,23 +98,44 @@ class Issue
         global $db;
 
         $sql = "SELECT
-                    i.id,
-                    i.issue_code,
-                    i.member_id,
-                    m.member_code,
-                    m.name AS member_name,
-                    i.book_id,
-                    b.title AS book_title,
-                    b.isbn,
-                    i.issue_date,
-                    i.due_date,
-                    i.return_date,
-                    i.status_id,
-                    i.fine_amount
-                FROM issues i, members m, books b
-                WHERE i.member_id = m.id
-                AND i.book_id = b.id
-                ORDER BY i.id DESC";
+            i.id,
+            i.issue_code,
+            i.member_id,
+            m.member_code,
+            m.name AS member_name,
+
+            i.book_id,
+            b.title AS book_title,
+            b.isbn,
+
+            i.issue_date,
+            i.due_date,
+            i.return_date,
+            i.status_id,
+            i.fine_amount,
+
+            COALESCE(fp.payment_status_id, 2) AS payment_status_id,
+            COALESCE(ps.name, 'Unpaid') AS payment_status_name
+
+            FROM issues i
+    
+            JOIN members m
+                ON i.member_id = m.id
+    
+            JOIN books b
+                ON i.book_id = b.id
+    
+            LEFT JOIN fine_payments fp
+                ON fp.id = (
+                SELECT MAX(fp2.id)
+                FROM fine_payments fp2
+                WHERE fp2.issue_id = i.id
+                )
+    
+            LEFT JOIN payment_statuses ps
+                ON ps.id = fp.payment_status_id
+    
+            ORDER BY i.id DESC";
 
         $result = $db->query($sql);
 
@@ -226,7 +247,6 @@ class Issue
                 "success" => true,
                 "message" => "Book returned successfully"
             ];
-
         }
 
         return [

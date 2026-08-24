@@ -111,14 +111,12 @@ if (isset($_GET['endpoint'])) {
     elseif ($endpoint == 'members' && $method == 'GET') {
 
         getMembers();
-
     }
 
     //issues
     elseif ($endpoint == 'issue' && $method == 'GET' && $id) {
 
         getIssueById($id);
-
     } elseif ($endpoint == 'issues' && $method == 'GET') {
 
         getIssues();
@@ -135,7 +133,22 @@ if (isset($_GET['endpoint'])) {
     } elseif ($endpoint == 'issue-return' && $method == 'POST') {
         $data = json_decode(file_get_contents("php://input"), true);
         returnIssue($data);
+    } elseif ($endpoint == 'fine-payment' && $method == 'POST') {
 
+        $data = json_decode(
+            file_get_contents("php://input"),
+            true
+        );
+
+        $result = FinePayment::create(
+            $data['issueId'],
+            $data['paidAmount'],
+            $data['paymentDate'] ?? null,
+            $data['receivedBy'] ?? null,
+            $data['notes'] ?? null
+        );
+
+        echo json_encode($result);
     }
 } else {
     http_response_code(404);
