@@ -15,8 +15,8 @@ function AddAuthor() {
         status: "Active"
     });
     const [errors, setErrors] = useState<any>({});
-    const [msg, setMsg] = useState(false);
-    const [success, setSuccess] = useState(false);
+    // const [msg, setMsg] = useState(false);
+    // const [success, setSuccess] = useState(false);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -75,8 +75,8 @@ function AddAuthor() {
                         res.status == 200 ||
                         res.status == 201
                     ) {
-                        setMsg(true);
-                        setSuccess(true);
+                        // setMsg(true);
+                        // setSuccess(true);
 
                         setFormData({
                             name: "",
@@ -91,8 +91,8 @@ function AddAuthor() {
                 .catch((err) => {
                     console.log(err);
 
-                    setMsg(true);
-                    setSuccess(false);
+                    // setMsg(true);
+                    // setSuccess(false);
                 });
         }
     };

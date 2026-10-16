@@ -13,11 +13,13 @@ import PostEdit from "./views/pages/post/PostEdit";
 import PostDetails from "./views/pages/post/PostDetails";
 import ProductCreate from "./views/pages/product/ProductCreate";
 import ProductManage from "./views/pages/product/ProductManage";
+import { loggedIn, needToLogin } from "./utils/Auth.ts";
 
 export const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    loader: needToLogin,
     children: [
       {
         path: "/",
@@ -67,7 +69,8 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
+    loader: loggedIn
   },
   {
     path: "*",

@@ -12,8 +12,8 @@ function FinePayments() {
     const [fines, setFines] = useState<Issue[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const [successMessage, setSuccessMessage] = useState("");
-    const [paymentLoading, setPaymentLoading] = useState(false);
+    // const [successMessage, setSuccessMessage] = useState("");
+    // const [paymentLoading, setPaymentLoading] = useState(false);
 
 
     useEffect(

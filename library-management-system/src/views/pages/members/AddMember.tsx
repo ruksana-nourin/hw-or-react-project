@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageHeading from "../../../components/PageHeading";
 import type { Member } from "../../../interfaces/Member";
-
+import { api } from "../../../config";
 function AddMember() {
 
     const navigate = useNavigate();
@@ -21,6 +21,39 @@ function AddMember() {
         registrationDate: new Date().toISOString().split("T")[0],
         status: "Active"
     });
+
+    const addMemberCode = () => {
+
+        api.get("member-code")
+            .then((res) => {
+
+                console.log("Next Member Code:", res.data);
+
+                if (res.data.success) {
+
+                    setFormData((prev) => ({
+                        ...prev,
+                        memberCode: res.data.memberCode
+                    }));
+
+                }
+
+            })
+            .catch((err) => {
+
+                console.log(
+                    "Member Code Error:",
+                    err
+                );
+
+            });
+    }
+    useEffect(() => {
+
+        addMemberCode();
+
+
+    }, []);
 
     const handleChange = (
         e: React.ChangeEvent<
@@ -43,11 +76,45 @@ function AddMember() {
     const handleSubmit = (
         e: React.FormEvent<HTMLFormElement>
     ) => {
+
         e.preventDefault();
 
         console.log("New Member:", formData);
 
-        navigate("/members");
+        api.post("member-create", formData)
+            .then((res) => {
+
+                console.log(
+                    "Member Create Response:",
+                    res.data
+                );
+
+                if (res.data.success) {
+
+                    alert("Member registered successfully");
+
+                    navigate("/members");
+
+                } else {
+
+                    alert(
+                        res.data.message ||
+                        "Failed to register member"
+                    );
+
+                }
+
+            })
+            .catch((err) => {
+
+                console.log(
+                    "Member Create Error:",
+                    err
+                );
+
+                alert("Failed to register member");
+
+            });
     };
 
     return (
@@ -89,10 +156,9 @@ function AddMember() {
                                             type="text"
                                             className="form-control"
                                             name="memberCode"
-                                            placeholder="Example: MEM-0004"
                                             value={formData.memberCode}
                                             onChange={handleChange}
-                                            required
+                                            readOnly
                                         />
 
                                     </div>

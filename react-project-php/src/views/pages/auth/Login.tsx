@@ -1,5 +1,32 @@
-import { Link } from "react-router";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { api } from "../../../config";
 function Login() {
+  const [user, setUser] = useState({ email: "nourin@mail.com", password: "123" });
+  const [msg, setMsg] = useState("");
+  const navigate= useNavigate();
+  // function handleSubmit(){}
+  //const handleSubmit= function (){}
+  const handleSubmit = () => {
+    console.log(user);
+    api.post("login", user)
+      .then((res) => {
+        console.log(res.data);
+        if(res.data.token){
+
+          localStorage.setItem("bearer_token", res.data.token);
+          setMsg("");
+          // window.location.href="/";
+          navigate("/");
+        }
+      })
+      .catch(err => {
+        // console.log(err.response.data);
+        if(err.response.status ==401)
+        setMsg(err.response.data);
+      else setMsg("⚠️Somthing went wrong. Login Failed");
+      });
+  };
   return (
     <>
       <main className="auth-page">
@@ -13,6 +40,7 @@ function Login() {
               <small>Sign in to your admin workspace.</small>
             </span>
           </Link>
+
           <form className="needs-validation">
             <div className="mb-4">
               <p className="eyebrow mb-1">Secure Access</p>
@@ -20,6 +48,9 @@ function Login() {
               <p className="text-muted mb-0">
                 Sign in to your admin workspace.
               </p>
+              <div className="pt-2 text-center">
+                <span className="badge border border-danger text-danger py-2 px-3 fw-bold" >{msg}</span>
+              </div>
             </div>
             <div className="mb-3">
               <label className="form-label" htmlFor="loginEmail">
@@ -30,6 +61,8 @@ function Login() {
                 id="loginEmail"
                 type="email"
                 required
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
               <div className="invalid-feedback">Enter a valid email.</div>
             </div>
@@ -46,8 +79,10 @@ function Login() {
                 className="form-control"
                 id="loginPassword"
                 type="password"
-                minLength={6}
+                minLength={3}
                 required
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
               <div className="invalid-feedback">
                 Password must be at least 6 characters.
@@ -63,10 +98,10 @@ function Login() {
                 Remember me
               </label>
             </div>
-            <Link to="/" className="btn btn-primary w-100">
+            <button type="button" className="btn btn-primary w-100" onClick={handleSubmit}>
               <i className="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>
               Sign In
-            </Link>
+            </button>
           </form>
 
           <div className="auth-footer">

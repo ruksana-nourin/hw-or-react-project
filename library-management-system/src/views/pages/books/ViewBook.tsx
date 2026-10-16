@@ -1,43 +1,63 @@
 
 import { Link, useParams } from "react-router";
 import PageHeading from "../../../components/PageHeading";
+import { useEffect, useState } from "react";
 import type { Book } from "../../../interfaces/Book";
+import { api } from "../../../config";
 
 function ViewBook() {
 
     const { id } = useParams();
+    const [book, setBook] = useState<Book | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const books: Book[] = [
-        {
-            id: 1,
-            title: "Clean Code",
-            isbn: "9780132350884",
-            author: "Robert C. Martin",
-            category: "Programming",
-            publisher: "Prentice Hall",
-            copies: 10,
-            availableCopies: 7,
-            status: "Available",
-            cover: "https://placehold.co/180x240"
-        },
-        {
-            id: 2,
-            title: "Atomic Habits",
-            isbn: "9780735211292",
-            author: "James Clear",
-            category: "Self Development",
-            publisher: "Avery",
-            copies: 5,
-            availableCopies: 0,
-            status: "Issued",
-            cover: "https://placehold.co/180x240"
-        }
-    ];
+    const getBook = () => {
 
-    const book = books.find(
-        (book) => book.id === Number(id)
-    );
+        api.get(`book-details?id=${id}`)
+            .then((res) => {
 
+                console.log("Book Details:", res.data);
+
+                setBook(res.data);
+
+            })
+            .catch((err) => {
+
+                console.log(
+                    "Book Details Error:",
+                    err
+                );
+
+            })
+            .finally(() => {
+
+                setLoading(false);
+
+            });
+
+    };
+
+    useEffect(() => {
+
+        getBook();
+
+    }, [id]);
+
+
+    if (loading) {
+        return (
+            <div className="container-fluid">
+
+                <PageHeading
+                    icon="book"
+                    subtitle="Library"
+                    title="Book Details"
+                    desc="Loading book information..."
+                />
+
+            </div>
+        );
+    }
     // Book not found
     if (!book) {
         return (
@@ -89,6 +109,7 @@ function ViewBook() {
         );
     }
 
+
     return (
         <div className="container-fluid">
 
@@ -117,7 +138,7 @@ function ViewBook() {
                         <div className="col-md-3 text-center">
 
                             <img
-                                src={book.cover}
+                                src={`http://localhost/library-management-api/${book.cover}`}
                                 alt={book.title}
                                 className="img-fluid rounded shadow-sm"
                             />
@@ -195,7 +216,7 @@ function ViewBook() {
                                     </div>
 
                                     <div className="fw-semibold">
-                                        {book.availableCopies}
+                                        {/* {book.availableCopies} */}
                                     </div>
                                 </div>
 

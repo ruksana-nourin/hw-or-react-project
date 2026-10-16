@@ -1,14 +1,30 @@
 
-import { Outlet } from "react-router"
+import { Outlet, useNavigate } from "react-router"
 import Footer from "./views/layout/Footer"
 import Navbar from "./views/layout/Navbar"
 import Sidebar from "./views/layout/Sidebar"
+import { useEffect } from "react";
 
 function App() {
+  // checkToken();
+  const navigate = useNavigate();
+
+  const checkLogin = () => {
+    if (!localStorage.getItem("bearer_token")) {
+      navigate("/login", { replace: true });
+    }
+  };
+  useEffect(() => {
+    checkLogin();
+    window.addEventListener("storage", checkLogin);
+    return () => {
+      window.removeEventListener("storage", checkLogin);
+    };
+  }, [navigate]);
 
   return (
     <>
-     
+
       <div className="admin-shell">
         <Sidebar />
 

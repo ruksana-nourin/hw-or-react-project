@@ -1,0 +1,90 @@
+/* Navy + cream theme. Visual-only overrides: existing scripts, markup and responsive breakpoints stay intact. */
+:root {
+  color-scheme: light;
+  --app-bg: #FDFBF7;
+  --surface: #FFFFFF;
+  --surface-muted: #F4EBDD;
+  --surface-hover: #F0E3D2;
+  --ink: #0D1C42;
+  --ink-secondary: #35415C;
+  --ink-muted: #59657C;
+  --border: #EADCC9;
+  --border-strong: #CDBBA4;
+  --accent: #D9745E;
+  --accent-text: #B84F3D;
+  --accent-hover: #C96550;
+  --accent-ink: #0D1C42;
+  --focus-ring: rgba(217, 116, 94, .42);
+  --shadow: 0 8px 24px rgba(13, 28, 66, .08);
+}
+html.theme-dark {
+  color-scheme: dark;
+  --app-bg: #03082F;
+  --surface: #0D1C42;
+  --surface-muted: #142650;
+  --surface-hover: #1B3260;
+  --ink: #FDFBF7;
+  --ink-secondary: #D8E0F0;
+  --ink-muted: #B4C1DA;
+  --border: #34466E;
+  --border-strong: #52678F;
+  --accent: #D9745E;
+  --accent-text: #F09A86;
+  --accent-hover: #E58A75;
+  --accent-ink: #03082F;
+  --focus-ring: rgba(217, 116, 94, .48);
+  --shadow: 0 8px 24px rgba(0, 0, 0, .22);
+}
+html, body { min-height: 100%; background: var(--app-bg); color: var(--ink); }
+body, button, input, select, textarea { color: var(--ink); }
+body { transition: none; }
+/* Main canvas, cards, menus, and nested surfaces */
+.bg-gray-50, .bg-gray-100, .hover\:bg-gray-100:hover { background-color: var(--app-bg) !important; }
+.bg-white { background-color: var(--surface) !important; }
+.bg-gray-200, .bg-gray-300 { background-color: var(--surface-muted) !important; }
+.bg-gray-700, .bg-gray-800, .bg-gray-900, .hover\:bg-gray-800:hover { background-color: var(--surface) !important; }
+.bg-purple-100, .bg-purple-100\/50 { background-color: var(--surface-muted) !important; }
+/* Typography: keep muted text readable in both modes */
+.text-gray-900, .text-gray-800, .text-gray-700, .text-gray-600 { color: var(--ink) !important; }
+.text-gray-500, .text-gray-400 { color: var(--ink-muted) !important; }
+.text-gray-300, .text-gray-200, .text-gray-100 { color: var(--ink-secondary) !important; }
+.theme-dark .dark\:text-white, .theme-dark .dark\:text-gray-100, .theme-dark .dark\:text-gray-200 { color: var(--ink) !important; }
+.theme-dark .dark\:text-gray-300, .theme-dark .dark\:text-gray-400 { color: var(--ink-secondary) !important; }
+/* Primary actions and focus states */
+.bg-purple-600, .hover\:bg-purple-700:hover, button.bg-purple-600, a.bg-purple-600 { background-color: var(--accent) !important; color: var(--accent-ink) !important; }
+.bg-purple-600 *, button.bg-purple-600 *, a.bg-purple-600 * { color: var(--accent-ink) !important; }
+.text-purple-600, .text-purple-500, .text-purple-300 { color: var(--accent-text) !important; }
+.border-purple-600, .focus\:border-purple-400:focus, .focus\:border-purple-300:focus { border-color: var(--accent) !important; }
+.focus\:shadow-outline-purple:focus { box-shadow: 0 0 0 3px var(--focus-ring) !important; }
+/* Structural borders, tables and separators */
+.border-gray-100, .border-gray-200, .border-gray-300, .divide-gray-100 > :not(template) ~ :not(template), .divide-gray-200 > :not(template) ~ :not(template) { border-color: var(--border) !important; }
+.border-gray-600, .border-gray-700, .border-gray-800 { border-color: var(--border-strong) !important; }
+/* Form controls and keyboard accessibility */
+input, select, textarea { background-color: var(--surface) !important; color: var(--ink) !important; border-color: var(--border-strong) !important; }
+input::placeholder, textarea::placeholder { color: var(--ink-muted) !important; opacity: 1; }
+input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; border-color: var(--accent) !important; box-shadow: 0 0 0 3px var(--focus-ring) !important; }
+/* Selected navigation and subtle accents */
+.bg-purple-600.rounded-tr-lg, .bg-purple-600.rounded-br-lg { background-color: var(--accent) !important; }
+.hover\:text-gray-700:hover, .hover\:text-gray-800:hover { color: var(--accent-text) !important; }
+/* Preserve clear semantic status colors (success, warning, error) */
+.text-red-600, .text-red-700 { color: #B42318 !important; }
+.bg-red-100 { background-color: #FCE8E5 !important; }
+.text-green-600, .text-green-700 { color: #16734A !important; }
+.bg-green-100 { background-color: #DDF5E8 !important; }
+.text-orange-700, .text-yellow-700 { color: #8A4B08 !important; }
+.bg-yellow-100, .bg-orange-100 { background-color: #FFF0D4 !important; }
+.theme-dark .text-red-600, .theme-dark .text-red-700 { color: #FF9B91 !important; }
+.theme-dark .text-green-600, .theme-dark .text-green-700 { color: #7BE0AC !important; }
+.theme-dark .text-orange-700, .theme-dark .text-yellow-700 { color: #FFD18A !important; }
+.theme-dark .bg-red-100 { background-color: #512B38 !important; }
+.theme-dark .bg-green-100 { background-color: #153E38 !important; }
+.theme-dark .bg-yellow-100, .theme-dark .bg-orange-100 { background-color: #493A27 !important; }
+/* Keep native controls and cards coherent without altering layout dimensions */
+.shadow, .shadow-md, .shadow-xl { box-shadow: var(--shadow) !important; }
+
+
+/* Vanilla JS conditional rendering helpers (replaces Alpine x-if / x-show). */
+html .contents.hidden { display: none !important; }
+html .contents:not(.hidden) { display: contents; }
+/* Apply the saved theme immediately and avoid a white flash between page paints. */
+html, body { background-color: var(--app-bg); color: var(--ink); }

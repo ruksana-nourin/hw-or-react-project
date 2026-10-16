@@ -8,7 +8,7 @@ function BookList() {
     const [categoryFilter, setCategoryFilter] = useState("All");
     const [statusFilter, setStatusFilter] = useState("All");
     const [currentPage, setCurrentPage] = useState(1);
-    const [deleteBook, setDeleteBook] = useState<Book | null>(null);
+    const [selectedBook, setSelectedBook] = useState<Book | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useEffect(() => {
@@ -16,46 +16,20 @@ function BookList() {
     }, [searchTerm, categoryFilter, statusFilter]);
 
 
-    // const books: Book[] = [
-    //     {
-    //         id: 1,
-    //         title: "Clean Code",
-    //         isbn: "9780132350884",
-    //         author: "Robert C. Martin",
-    //         category: "Programming",
-    //         publisher: "Prentice Hall",
-    //         copies: 10,
-    //         availableCopies: 7,
-    //         status: "Available",
-    //         cover: "https://placehold.co/60x80"
-    //     },
-    //     {
-    //         id: 2,
-    //         title: "Atomic Habits",
-    //         isbn: "9780735211292",
-    //         author: "James Clear",
-    //         category: "Self Development",
-    //         publisher: "Avery",
-    //         copies: 5,
-    //         availableCopies: 0,
-    //         status: "Issued",
-    //         cover: "https://placehold.co/60x80"
-    //     }
-    // ];
+
     const [books, setBooks] = useState<Book[]>([]);
     const getBooks = () => {
-    api.get("books")
-        .then((res) => {
-            console.log(res.data);
-            setBooks(res.data);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-};
-useEffect(() => {
-    getBooks();
-}, []);
+        api.get("books")
+            .then((res) => {
+                console.log(res.data);
+                setBooks(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+
 
     const filteredBooks = books.filter((book) => {
 
@@ -63,8 +37,8 @@ useEffect(() => {
 
         const matchesSearch =
             book.title.toLowerCase().includes(search) ||
-            book.isbn.toLowerCase().includes(search) ||
-            book.author.toLowerCase().includes(search);
+            book.isbn.toLowerCase().includes(search);
+        // book.author.toLowerCase().includes(search);
 
         const matchesCategory =
             categoryFilter === "All" ||
@@ -92,18 +66,51 @@ useEffect(() => {
         startIndex + booksPerPage
     );
 
+    //delete book
     const handleDeleteClick = (book: Book) => {
-        setDeleteBook(book);
+        setSelectedBook(book);
         setShowDeleteModal(true);
     };
     const handleDeleteConfirm = () => {
-        if (!deleteBook) return;
 
-        console.log("Delete book:", deleteBook);
+        if (!selectedBook?.id) {
+            return;
+        }
 
-        setShowDeleteModal(false);
-        setDeleteBook(null);
+        api.delete(`book-delete?id=${selectedBook.id}`)
+            .then((res) => {
+
+                console.log(
+                    "Delete Response:",
+                    res.data
+                );
+
+                if (res.data.success) {
+
+                    alert("Book deleted successfully");
+
+                    setShowDeleteModal(false);
+                    setSelectedBook(null);
+
+                    getBooks();
+                }
+
+            })
+            .catch((err) => {
+
+                console.log(
+                    "Book Delete Error:",
+                    err
+                );
+
+                alert("Failed to delete book");
+
+            });
     };
+
+    useEffect(() => {
+        getBooks();
+    }, []);
     return (
         <>
 
@@ -235,11 +242,11 @@ useEffect(() => {
 
                                                     {/* Cover */}
                                                     <td>
-                                                         {(book.cover != null && book.cover != "") ? (
+                                                        {(book.cover != null && book.cover != "") ? (
                                                             <img
                                                                 src={basePath + book.cover} width={50} height={50} alt={book.title} loading="lazy" />
-                                                        ):
-                                                    <div>Ok</div>
+                                                        ) :
+                                                            <div>Ok</div>
                                                         }
                                                     </td>
 
@@ -264,10 +271,10 @@ useEffect(() => {
                                                     {/* Copies */}
                                                     <td>
                                                         <span className="fw-semibold">
-                                                            {book.availableCopies}
+                                                            {/* {book.availableCopies} */}
                                                         </span>
                                                         <span className="text-muted">
-                                                            
+
                                                             {book.copies}
                                                         </span>
                                                     </td>
@@ -307,12 +314,20 @@ useEffect(() => {
 
                                                         <button
                                                             type="button"
-                                                            className="btn btn-sm btn-outline-danger"
+                                                            className="btn btn-sm btn-outline-danger me-2"
                                                             title="Delete"
                                                             onClick={() => handleDeleteClick(book)}
                                                         >
                                                             <i className="bi bi-trash"></i>
                                                         </button>
+
+                                                        <Link
+                                                            to={`/issues?bookId=${book.id}`}
+                                                            className="btn btn-sm btn-success"
+                                                            title="Issue Book"
+                                                        >
+                                                            <i className="bi bi-journal-arrow-up"></i>
+                                                        </Link>
 
                                                     </td>
 
@@ -417,7 +432,7 @@ useEffect(() => {
 
                 </div>
             </main>
-            {showDeleteModal && deleteBook && (
+            {showDeleteModal && selectedBook && (
                 <div
                     className="modal fade show d-block"
                     tabIndex={-1}
@@ -437,7 +452,7 @@ useEffect(() => {
                                     className="btn-close"
                                     onClick={() => {
                                         setShowDeleteModal(false);
-                                        setDeleteBook(null);
+                                        setSelectedBook(null);
                                     }}
                                     aria-label="Close"
                                 ></button>
@@ -450,9 +465,9 @@ useEffect(() => {
                                 </p>
 
                                 <div className="alert alert-warning mb-0">
-                                    <strong>{deleteBook.title}</strong>
+                                    <strong>{selectedBook.title}</strong>
                                     <br />
-                                    ISBN: {deleteBook.isbn}
+                                    ISBN: {selectedBook.isbn}
                                 </div>
 
                             </div>
@@ -464,7 +479,7 @@ useEffect(() => {
                                     className="btn btn-light"
                                     onClick={() => {
                                         setShowDeleteModal(false);
-                                        setDeleteBook(null);
+                                        setSelectedBook(null);
                                     }}
                                 >
                                     Cancel

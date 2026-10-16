@@ -1,9 +1,15 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useTheme } from "../../hooks/useTheme";
 
 function Navbar() {
     const { theme, toggleTheme } = useTheme();
     const nextTheme = theme === "dark" ? "light" : "dark";
+    const navigate = useNavigate();
+    function handleLogout() {
+        localStorage.removeItem('bearer_token');
+        navigate("/login");
+
+    }
     return (
         <>
             <nav className="navbar admin-navbar navbar-expand bg-white">
@@ -55,14 +61,20 @@ function Navbar() {
 
                         <div className="dropdown">
                             <button className="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img className="avatar-img avatar-sm" src="https://i.pravatar.cc/50?img=20" alt="Admin Hasan" />
+                                <img className="avatar-img avatar-sm" src="https://i.pravatar.cc/50?img=20" alt="Admin R. Nourin" />
                                 <span className="profile-name d-none d-sm-inline">R. Nourin</span>
                             </button>
                             <ul className="dropdown-menu dropdown-menu-end">
                                 <li><Link className="dropdown-item" to="profile.html">Profile</Link ></li>
                                 <li><Link className="dropdown-item" to="settings.html">Account settings</Link ></li>
                                 <li><hr className="dropdown-divider" /></li>
-                                <li><Link className="dropdown-item" to="/login">Sign out</Link ></li>
+                                <li>
+                                    <a
+                                        className="dropdown-item"
+                                        onClick={handleLogout}>
+                                        Sign out
+                                    </a >
+                                </li>
                             </ul>
                         </div>
                     </div>

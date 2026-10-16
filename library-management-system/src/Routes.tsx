@@ -4,7 +4,7 @@ import Dashboard from "./views/pages/Dashboard";
 import UserList from "./views/pages/users/UserList";
 import AddUser from "./views/pages/users/AddUser";
 import Error from "./views/pages/404";
-import Login from "./views/pages/Login";
+import Login from "./views/pages/auth/Login";
 import ViewUser from "./views/pages/users/ViewUser";
 import EditUser from "./views/pages/users/EditUser";
 import BookList from "./views/pages/books/BookList";
@@ -34,12 +34,14 @@ import ReturnedBooks from "./views/pages/issues/ReturnedBooks";
 import FinePayments from "./views/pages/issues/FinePayments";
 import MembershipPayments from "./views/pages/members/MembershipPayments";
 import Settings from "./views/pages/settings/Settings";
+import { loggedIn, needToLogin } from "./utils/Auth";
 
 
-const routes = createBrowserRouter([
+export const routes = createBrowserRouter([
     {
         path: "/",
         element: <App />,
+        loader: needToLogin,
         children: [
             {
                 path: "/",
@@ -187,12 +189,11 @@ const routes = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Login />
+        element: <Login />,
+        loader: loggedIn
     },
     {
         path: "*",
         element: <Error />
     },
 ]);
-
-export default routes

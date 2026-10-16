@@ -1,16 +1,16 @@
 <?php
     //local
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', 'library_management');
-
-
-    //Hosting
     // define('DB_HOST', 'localhost');
     // define('DB_USER', 'root');
     // define('DB_PASS', '');
     // define('DB_NAME', 'library_management');
+
+
+    //Hosting
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'nourinxy_lbmuser');
+    define('DB_PASS', '09.june.2002.lbm');
+    define('DB_NAME', 'nourinxy_library_management');
 
     $db= new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 

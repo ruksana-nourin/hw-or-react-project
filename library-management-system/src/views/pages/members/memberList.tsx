@@ -1,57 +1,70 @@
 import { Link } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PageHeading from "../../../components/PageHeading";
 import type { Member } from "../../../interfaces/Member";
+import { api } from "../../../config";
 
 function MemberList() {
 
+    const [members, setMembers] = useState<Member[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [deleteMember, setDeleteMember] = useState<Member | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const getMembers = () => {
 
+        api.get("members")
+        .then((res) => {
 
+            console.log("Members:", res.data);
 
-    const members: Member[] = [
-        {
-            id: 1,
-            memberCode: "MEM-0001",
-            name: "Ruksana Nourin",
-            email: "ruksana@example.com",
-            phone: "01700000001",
-            address: "Dhaka, Bangladesh",
-            membershipType: "Regular",
-            registrationFee: 500,
-            paymentStatus: "Paid",
-            registrationDate: "2026-08-01",
-            status: "Active"
-        },
-        {
-            id: 2,
-            memberCode: "MEM-0002",
-            name: "Nusrat Jahan",
-            email: "nusrat@example.com",
-            phone: "01700000002",
-            address: "Sylhet, Bangladesh",
-            membershipType: "Premium",
-            registrationFee: 1000,
-            paymentStatus: "Paid",
-            registrationDate: "2026-08-03",
-            status: "Active"
-        },
-        {
-            id: 3,
-            memberCode: "MEM-0003",
-            name: "Sadia Rahman",
-            email: "sadia@example.com",
-            phone: "01700000003",
-            address: "Chittagong, Bangladesh",
-            membershipType: "Regular",
-            registrationFee: 500,
-            paymentStatus: "Unpaid",
-            registrationDate: "2026-08-05",
-            status: "Inactive"
-        }
-    ];
+            const mappedMembers: Member[] = res.data.map(
+                (item: any) => ({
+
+                    id: Number(item.id),
+
+                    memberCode: item.member_code,
+
+                    name: item.name,
+
+                    email: item.email,
+
+                    phone: item.phone,
+
+                    address: "",
+
+                    membershipType: "Regular",
+
+                    registrationFee: 0,
+
+                    paymentStatus: "Unpaid",
+
+                    registrationDate: "",
+
+                    status:
+                        Number(item.status_id) === 1
+                            ? "Active"
+                            : "Inactive"
+                })
+            );
+
+            setMembers(mappedMembers);
+
+        })
+        .catch((err) => {
+
+            console.log(
+                "Members Error:",
+                err
+            );
+
+        });
+
+    };
+    useEffect(() => {
+
+        getMembers();
+
+    }, []);
 
     const filteredMembers = members.filter((member) =>
         member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

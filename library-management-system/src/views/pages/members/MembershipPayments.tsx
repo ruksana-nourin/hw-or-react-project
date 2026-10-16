@@ -18,36 +18,7 @@ function MembershipPayments() {
             fee: 500,
             status: "Paid"
         },
-        {
-            id: 2,
-            memberId: 2,
-            memberCode: "MEM-0002",
-            memberName: "Nusrat Jahan",
-            membershipType: "Premium",
-            registrationDate: "2026-08-03",
-            fee: 1000,
-            status: "Paid"
-        },
-        {
-            id: 3,
-            memberId: 3,
-            memberCode: "MEM-0003",
-            memberName: "Sadia Rahman",
-            membershipType: "Regular",
-            registrationDate: "2026-08-05",
-            fee: 500,
-            status: "Unpaid"
-        },
-        {
-            id: 4,
-            memberId: 4,
-            memberCode: "MEM-0004",
-            memberName: "Ayesha Rahman",
-            membershipType: "Regular",
-            registrationDate: "2026-08-07",
-            fee: 500,
-            status: "Unpaid"
-        }
+        
     ]);
 
     const [searchTerm, setSearchTerm] = useState("");

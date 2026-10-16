@@ -1,10 +1,10 @@
 import { Link } from "react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PageHeading from "../../../components/PageHeading";
 import { api } from "../../../config";
 import { defaultUser } from "../../../interfaces/User";
 import type { User } from "../../../interfaces/User";
-import type { Role } from "../../../interfaces/Role";
+// import type { Role } from "../../../interfaces/Role";
 
 function AddUser() {
 
@@ -20,7 +20,7 @@ function AddUser() {
     address: "",
     notes: "",
   });
-  const [roles, setRoles] = useState<Role[]>([]);
+  // const [roles, setRoles] = useState<Role[]>([]);
   const [msg, setMsg] = useState(false);
   const [success, setSuccess] = useState(false);
 

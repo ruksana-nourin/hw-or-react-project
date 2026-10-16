@@ -76,6 +76,46 @@ class Book
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    public static function getById($id)
+{
+    global $db;
+
+    $query = "SELECT 
+                b.id,
+                b.title,
+                b.isbn,
+                b.author_id,
+                a.name AS author,
+                b.category_id,
+                c.name AS category,
+                b.publisher_id,
+                p.name AS publisher,
+                b.total_copies AS copies,
+                b.status_id,
+                s.name AS status,
+                b.cover_image AS cover,
+                b.created_at,
+                b.updated_at
+              FROM books AS b
+              JOIN authors AS a
+                ON b.author_id = a.id
+              JOIN categories AS c
+                ON b.category_id = c.id
+              JOIN publishers AS p
+                ON b.publisher_id = p.id
+              JOIN book_statuses AS s
+                ON b.status_id = s.id
+              WHERE b.id = $id";
+
+    $result = $db->query($query);
+
+    if (!$result) {
+        return false;
+    }
+
+    return $result->fetch_assoc();
+}
+
     public function create()
     {
         global $db;
@@ -111,6 +151,60 @@ class Book
             return $db->error;
         }
     }
+    public function update()
+    {
+        global $db;
+        $sql = "UPDATE books SET
+            title = '$this->title',
+            isbn = '$this->isbn',
+            author_id = $this->author_id,
+            category_id = $this->category_id,
+            publisher_id = $this->publisher_id,
+            total_copies = $this->total_copies,
+            status_id = $this->status_id,
+            cover_image = '$this->cover_image'
+            WHERE id = $this->id";
 
+        $result = $db->query($sql);
+
+        if ($result) {
+            return [
+                "success" => true,
+                "message" => "Book updated successfully"
+            ];
+        }
+        return [
+            "success" => false,
+            "message" => $db->error
+        ];
+    }
+
+    public static function deleteById($id)
+{
+    global $db;
+
+    $sql = "DELETE FROM books
+            WHERE id = $id";
+
+    $result = $db->query($sql);
+
+    if (!$result) {
+        return [
+            "success" => false,
+            "message" => $db->error
+        ];
+    }
+
+    if ($db->affected_rows === 0) {
+        return [
+            "success" => false,
+            "message" => "Book not found"
+        ];
+    }
+
+    return [
+        "success" => true,
+        "message" => "Book deleted successfully"
+    ];
 }
-?>
+}

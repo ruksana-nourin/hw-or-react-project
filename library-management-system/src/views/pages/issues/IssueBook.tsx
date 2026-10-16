@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import PageHeading from "../../../components/PageHeading";
 import type { Issue } from "../../../interfaces/Issue";
 import { api } from "../../../config";
+import { useSearchParams } from "react-router";
 function IssueBook() {
     const navigate = useNavigate();
 
@@ -31,12 +32,28 @@ function IssueBook() {
 
         fineStatus: "No Fine"
     });
-    const [errors, setErrors] = useState<any>({});
+    
+    // const [errors, setErrors] = useState<any>({});
     const [msg, setMsg] = useState(false);
     const [success, setSuccess] = useState(false);
     const [books, setBooks] = useState<any[]>([]);
     const [members, setMembers] = useState<any[]>([]);
     const [issueCode, setIssueCode] = useState("");
+    const [searchParams] = useSearchParams();
+
+    const bookId = searchParams.get("bookId");
+    useEffect(() => {
+
+    if (bookId) {
+
+        setFormData((prev) => ({
+            ...prev,
+            bookId: Number(bookId)
+        }));
+
+    }
+
+}, [bookId]);
 
     const handleChange = (
         e: React.ChangeEvent<
@@ -92,7 +109,7 @@ function IssueBook() {
             newErrors.dueDate = "";
         }
 
-        setErrors(newErrors);
+        // setErrors(newErrors);
 
         if (
 

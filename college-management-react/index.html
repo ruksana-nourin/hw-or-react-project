@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Windmill</title>
+    <script>
+      // Apply the saved theme before CSS paints the page to prevent a white flash.
+      (function () {
+        try {
+          var savedTheme = window.localStorage.getItem('dark');
+          var isDark = savedTheme !== null
+            ? JSON.parse(savedTheme)
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) document.documentElement.classList.add('theme-dark');
+        } catch (e) {
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('theme-dark');
+          }
+        }
+      })();
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/tailwind.output.css" />
+    <link rel="stylesheet" href="/assets/css/palette-theme.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+      defer
+    ></script>
+    <script src="/assets/js/charts-lines.js" defer></script>
+    <script src="/assets/js/charts-pie.js" defer></script>
+    <script src="assets/js/vanilla-ui.js" defer></script>
+
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
